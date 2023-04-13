@@ -13,8 +13,8 @@ export default class Order {
     return this.items ? this.items.push(product) : this.items = [product];
   }
 
-  getItems(){
-    return this.items;
+  getItems(): OrderItem[]{
+    return this.items ? this.items : [];
   }
 
   getTotal(){
