@@ -28,5 +28,5 @@ test('Should create an order with 3 items, associate discount coupon and calcula
   const data = await axios.post("http://localhost:3000/order", order)
 
   expect(data.data.items).toBe(3);
-  expect(data.data.total).toBe(120);
+  expect(data.data.total).toBe(114);
 })
