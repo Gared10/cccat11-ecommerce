@@ -23,6 +23,9 @@ app.post("/order", async function (request: Request, response: Response) {
     })
     result.total = order.getTotal()
     result.items = order.getItems().length
+    if(request.body.coupon){
+      result.total -= order.getTotal() * (request.body.coupon/100)
+    }
   }
 
   return response.json(result);
