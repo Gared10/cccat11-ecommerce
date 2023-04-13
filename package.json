@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "jest --watchAll",
-    "dev": "ts-node ./src/main.ts"
+    "dev": "ts-node-dev ./src/main.ts"
   },
   "keywords": [],
   "author": "",
@@ -20,6 +20,7 @@
   },
   "devDependencies": {
     "@types/express": "^4.17.17",
-    "@types/jest": "^29.5.0"
+    "@types/jest": "^29.5.0",
+    "ts-node-dev": "^2.0.0"
   }
 }
