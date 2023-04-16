@@ -38,7 +38,7 @@ export default class Order {
     let secondVerifierDigit: string = '';
     let mod: number = 0;
     let validateCPF: string = '';
-    
+
     if (this.cpf.length < 11) return false;
     for(digit; digit<this.cpf.length; digit++){
       firstVerifierSum += (Number(this.cpf[digit])*(11-(digit+1)))
@@ -47,7 +47,7 @@ export default class Order {
         firstVerifierDigit = mod >= 2 ? String(11-mod) : '0'
         mod = 0
       }
-      secondVerifierSum += (digit !== 10 ? Number(this.cpf[digit]) : Number(firstVerifierDigit) * (11-(digit)) )
+      secondVerifierSum += ((digit+1 !== 10 ? Number(this.cpf[digit]) : Number(firstVerifierDigit)) * (11-(digit)))
       if(digit+1 === 10){
         mod = secondVerifierSum % 11
         secondVerifierDigit = mod >= 2 ? String(11-mod) : '0'
