@@ -17,7 +17,7 @@ app.post("/order", async function (request: Request, response: Response) {
   let order: Order
 
   if(request.body.items){
-    order = new Order(request.body.cpf)
+    order = new Order(request.body.cpf ?? '')
     if(!order.isValidCpf()){
       result.message = 'CPF inválido!';
     } else {
