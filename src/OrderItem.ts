@@ -14,4 +14,16 @@ export default class OrderItem {
     return this.quantity * this.price;
   }
 
+  getDescription(): string{
+    return this.description;
+  }
+
+  getQuantity(): number{
+    return this.quantity;
+  }
+
+  getPrice(): number{
+    return this.price;
+  }
+
 }
