@@ -50,7 +50,7 @@ test('Should alert that the cpf is invalid and not create any order', async func
 
   expect(data.data.items).toBe(0);
   expect(data.data.total).toBe(0);
-  expect(data.data.message).toBe('CPF inválido!');
+  expect(data.data.message).toBe('Invalid cpf');
 })
 
 test('Should alert that the cpf is invalid and not create any order because cpf field is not filled in request data', async function () {
@@ -67,5 +67,5 @@ test('Should alert that the cpf is invalid and not create any order because cpf 
 
   expect(data.data.items).toBe(0);
   expect(data.data.total).toBe(0);
-  expect(data.data.message).toBe('CPF inválido!');
+  expect(data.data.message).toBe('Invalid cpf');
 })
