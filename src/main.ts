@@ -2,7 +2,6 @@ import express, { Request, Response } from "express";
 import OrderItem from "./OrderItem";
 import Order from "./Order";
 import { validate } from "./validateCPF";
-import config from "./config";
 import pgp from "pg-promise";
 
 const app = express()
