@@ -34,7 +34,6 @@ app.post("/order", async function (request: Request, response: Response) {
       const percentage: number = parseFloat(couponData.percentage);
       const expiration_date: Date = new Date(couponData.expiration_date);
       const nowDate: Date = new Date();
-      console.log(expiration_date, nowDate)
       if (expiration_date < nowDate) {
         result.message = 'Expired coupon! Order total amount without discount!'
       } else {
