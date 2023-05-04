@@ -30,9 +30,16 @@ app.post("/order", async function (request: Request, response: Response) {
     result.total = order.getTotal();
     result.items = order.getItems().length;
     if (request.body.coupon) {
-      const [couponData] = await connection.query('select percentage from ecommerce.coupon where code = $1', [request.body.coupon]);
+      const [couponData] = await connection.query('select percentage, expiration_date from ecommerce.coupon where code = $1', [request.body.coupon]);
       const percentage: number = parseFloat(couponData.percentage);
-      result.total -= order.getTotal() * (percentage / 100);
+      const expiration_date: Date = new Date(couponData.expiration_date);
+      const nowDate: Date = new Date();
+      console.log(expiration_date, nowDate)
+      if (expiration_date < nowDate) {
+        result.message = 'Expired coupon! Order total amount without discount!'
+      } else {
+        result.total -= order.getTotal() * (percentage / 100);
+      }
     }
   }
 
