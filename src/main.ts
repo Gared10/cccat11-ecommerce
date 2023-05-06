@@ -24,12 +24,17 @@ app.post("/order", async function (request: Request, response: Response) {
   if (request.body.items) {
     order = new Order(request.body.cpf)
     for (const item of request.body.items) {
+      if (item.quantity <= 0) {
+        order.setItems([])
+        result.message = 'Order has item with negative quantity!'
+        break;
+      }
       const [productData] = await connection.query("select description, price from ecommerce.product where id_product = $1", [item.idProduct]);
       order.addOrderItem(productData.description, item.quantity, productData.price);
     }
     result.total = order.getTotal();
     result.items = order.getItems().length;
-    if (request.body.coupon) {
+    if (request.body.coupon && result.items > 0) {
       const [couponData] = await connection.query('select percentage, expiration_date from ecommerce.coupon where code = $1', [request.body.coupon]);
       const percentage: number = parseFloat(couponData.percentage);
       const expiration_date: Date = new Date(couponData.expiration_date);

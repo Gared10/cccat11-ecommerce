@@ -30,5 +30,9 @@ export default class Order {
     return this.cpf
   }
 
+  setItems(items: OrderItem[]): void {
+    this.items = items;
+  }
+
 
 }

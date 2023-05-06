@@ -87,3 +87,21 @@ test("Should not apply expired discount coupon", async function () {
   expect(data.data.total).toBe(35000);
   expect(data.data.message).toBe('Expired coupon! Order total amount without discount!')
 })
+
+test("Should not apply expired discount coupon", async function () {
+  const order = {
+    cpf: "11144477735",
+    items: [
+      { "idProduct": 1, "quantity": 2 },
+      { "idProduct": 2, "quantity": -5 },
+      { "idProduct": 3, "quantity": 1 }
+    ],
+    coupon: "VALE20"
+  }
+
+  const data = await axios.post("http://localhost:3000/order", order)
+
+  expect(data.data.items).toBe(0);
+  expect(data.data.total).toBe(0);
+  expect(data.data.message).toBe('Order has item with negative quantity!')
+})
