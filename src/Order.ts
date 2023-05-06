@@ -9,8 +9,8 @@ export default class Order {
     this.cpf = cpf
   }
 
-  addOrderItem(description: string, quantity: number, price: number) {
-    const product = new OrderItem(description, quantity, price);
+  addOrderItem(description: string, quantity: number, price: number, idProduct: number) {
+    const product = new OrderItem(description, quantity, price, idProduct);
     return this.items ? this.items.push(product) : this.items = [product];
   }
 

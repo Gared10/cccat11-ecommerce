@@ -30,7 +30,12 @@ app.post("/order", async function (request: Request, response: Response) {
         break;
       }
       const [productData] = await connection.query("select description, price from ecommerce.product where id_product = $1", [item.idProduct]);
-      order.addOrderItem(productData.description, item.quantity, productData.price);
+      if (order.getItems().find(element => element.getIdProduct() === item.idProduct)) {
+        order.setItems([]);
+        result.message = 'Order with duplicated items!'
+        break;
+      }
+      order.addOrderItem(productData.description, item.quantity, productData.price, item.idProduct);
     }
     result.total = order.getTotal();
     result.items = order.getItems().length;
