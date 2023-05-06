@@ -156,3 +156,22 @@ test("Should not create order items that have negative weight", async function (
   expect(data.data.total).toBe(0);
   expect(data.data.message).toBe('Order has items with negative measures!')
 })
+
+test('Should create an order with 3 items, associate discount coupon and calculate total amount(with discount over total amount)', async function () {
+  const order = {
+    cpf: "11144477735",
+    items: [
+      { "idProduct": 1, "quantity": 2 },
+      { "idProduct": 2, "quantity": 5 },
+      { "idProduct": 3, "quantity": 1 }
+    ],
+    coupon: "VALE20_2"
+  }
+
+  const data = await axios.post("http://localhost:3000/order", order)
+
+  expect(data.data.items).toBe(3);
+  expect(data.data.total).toBe(28000);
+  expect(data.data.fare).toBe(440)
+  expect(data.data.message).toBe('');
+})

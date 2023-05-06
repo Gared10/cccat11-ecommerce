@@ -3,5 +3,5 @@ export function calculateFare(height: number, width: number, product_length: num
   const density: number = weight / volume;
   const fare: number = 1000 * volume * (density / 100);
 
-  return fare >= 10 ? fare : 10;
+  return fare >= 10 ? Math.round(fare) : 10;
 }

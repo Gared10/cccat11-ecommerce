@@ -13,6 +13,7 @@ app.post("/order", async function (request: Request, response: Response) {
   const result = {
     total: 0,
     items: 0,
+    fare: 0,
     message: ''
   }
   let items: OrderItem[]
@@ -35,15 +36,16 @@ app.post("/order", async function (request: Request, response: Response) {
         result.message = 'Order with duplicated items!'
         break;
       }
-      if (productData.width <= 0 || productData.width <= 0 || productData.product_length <= 0 || productData.weight <= 0) {
+      if (productData.height <= 0 || productData.width <= 0 || productData.product_length <= 0 || productData.weight <= 0) {
         order.setItems([]);
         result.message = 'Order has items with negative measures!'
         break;
       }
-      order.addOrderItem(productData.description, item.quantity, productData.price, item.idProduct);
+      order.addOrderItem(productData.description, item.quantity, productData.price, item.idProduct, productData.height, productData.weight, productData.width, productData.product_length);
     }
     result.total = order.getTotal();
     result.items = order.getItems().length;
+    result.fare = order.getTotalFare();
     if (request.body.coupon && result.items > 0) {
       const [couponData] = await connection.query('select percentage, expiration_date from ecommerce.coupon where code = $1', [request.body.coupon]);
       const percentage: number = parseFloat(couponData.percentage);
