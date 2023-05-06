@@ -29,10 +29,15 @@ app.post("/order", async function (request: Request, response: Response) {
         result.message = 'Order has item with negative quantity!'
         break;
       }
-      const [productData] = await connection.query("select description, price from ecommerce.product where id_product = $1", [item.idProduct]);
+      const [productData] = await connection.query("select description, price, width, height, weight, product_length from ecommerce.product where id_product = $1", [item.idProduct]);
       if (order.getItems().find(element => element.getIdProduct() === item.idProduct)) {
         order.setItems([]);
         result.message = 'Order with duplicated items!'
+        break;
+      }
+      if (productData.width <= 0 || productData.width <= 0 || productData.product_length <= 0) {
+        order.setItems([]);
+        result.message = 'Order has items with negative measures!'
         break;
       }
       order.addOrderItem(productData.description, item.quantity, productData.price, item.idProduct);

@@ -124,3 +124,19 @@ test("Should not create order with duplicated items", async function () {
   expect(data.data.total).toBe(0);
   expect(data.data.message).toBe('Order with duplicated items!')
 })
+
+test("Should not create order items that have negative measures", async function () {
+  const order = {
+    cpf: "11144477735",
+    items: [
+      { "idProduct": 4, "quantity": 2 },
+    ],
+    coupon: "VALE20_2"
+  }
+
+  const data = await axios.post("http://localhost:3000/order", order)
+
+  expect(data.data.items).toBe(0);
+  expect(data.data.total).toBe(0);
+  expect(data.data.message).toBe('Order has items with negative measures!')
+})
