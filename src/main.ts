@@ -35,7 +35,7 @@ app.post("/order", async function (request: Request, response: Response) {
         result.message = 'Order with duplicated items!'
         break;
       }
-      if (productData.width <= 0 || productData.width <= 0 || productData.product_length <= 0) {
+      if (productData.width <= 0 || productData.width <= 0 || productData.product_length <= 0 || productData.weight <= 0) {
         order.setItems([]);
         result.message = 'Order has items with negative measures!'
         break;
