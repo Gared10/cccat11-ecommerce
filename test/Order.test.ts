@@ -88,7 +88,7 @@ test("Should not apply expired discount coupon", async function () {
   expect(data.data.message).toBe('Expired coupon! Order total amount without discount!')
 })
 
-test("Should not apply expired discount coupon", async function () {
+test("Should not create order with negative quantity item", async function () {
   const order = {
     cpf: "11144477735",
     items: [
