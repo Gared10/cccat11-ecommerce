@@ -9,7 +9,7 @@ export default class Order {
     this.cpf = cpf
   }
 
-  addOrderItem(description: string, quantity: number, price: number, idProduct: number) {
+  addOrderItem(description: string, quantity: number, price: number, idProduct: number): number | OrderItem[] {
     const product = new OrderItem(description, quantity, price, idProduct);
     return this.items ? this.items.push(product) : this.items = [product];
   }
@@ -18,7 +18,7 @@ export default class Order {
     return this.items ? this.items : [];
   }
 
-  getTotal() {
+  getTotal(): number {
     let totalAmount: number = 0
     this.items?.map((item: OrderItem) => {
       totalAmount += item.getItemTotal();
@@ -26,7 +26,7 @@ export default class Order {
     return totalAmount;
   }
 
-  getCpf() {
+  getCpf(): string {
     return this.cpf
   }
 
