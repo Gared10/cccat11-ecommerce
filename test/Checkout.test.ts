@@ -1,8 +1,20 @@
 import axios from "axios";
+import Checkout from "../src/Checkout";
+import ProductRepositoryDatabase from "../src/ProductRepositoryDatabase";
+import CouponRepositoryDatabase from "../src/CouponRepositoryDatabase";
 
 axios.defaults.validateStatus = function () {
   return true;
 }
+
+let checkout: Checkout;
+
+beforeEach(() => {
+  const productRepository = new ProductRepositoryDatabase();
+  const couponRepository = new CouponRepositoryDatabase();
+  checkout = new Checkout(productRepository, couponRepository);
+
+});
 
 test('Should create an order with 3 items and calculate total amount', async function () {
   const order = {
@@ -14,11 +26,10 @@ test('Should create an order with 3 items and calculate total amount', async fun
     ],
   }
 
-  const data = await axios.post("http://localhost:3000/order", order)
-
-  expect(data.data.items).toBe(3);
-  expect(data.data.total).toBe(35000);
-  expect(data.data.message).toBe('');
+  const response = await checkout.execute(order);
+  expect(response.items).toBe(3);
+  expect(response.total).toBe(35000);
+  expect(response.message).toBe('');
 })
 
 test('Should create an order with 3 items, associate discount coupon and calculate total amount(with discount over total amount)', async function () {
@@ -32,11 +43,10 @@ test('Should create an order with 3 items, associate discount coupon and calcula
     coupon: "VALE20_2"
   }
 
-  const data = await axios.post("http://localhost:3000/order", order)
-
-  expect(data.data.items).toBe(3);
-  expect(data.data.total).toBe(28000);
-  expect(data.data.message).toBe('');
+  const response = await checkout.execute(order);
+  expect(response.items).toBe(3);
+  expect(response.total).toBe(28000);
+  expect(response.message).toBe('');
 })
 
 test('Should alert that the cpf is invalid and not create any order', async function () {
@@ -50,15 +60,12 @@ test('Should alert that the cpf is invalid and not create any order', async func
     coupon: "VALE20_2"
   }
 
-  const data = await axios.post("http://localhost:3000/order", order)
-
-  expect(data.data.items).toBe(0);
-  expect(data.data.total).toBe(0);
-  expect(data.data.message).toBe('Invalid cpf');
+  expect(() => checkout.execute(order)).rejects.toThrow(new Error('Invalid cpf'));
 })
 
 test('Should alert that the cpf is invalid and not create any order because cpf field is not filled in request data', async function () {
   const order = {
+    cpf: '',
     items: [
       { "idProduct": 1, "quantity": 2 },
       { "idProduct": 2, "quantity": 5 },
@@ -67,11 +74,7 @@ test('Should alert that the cpf is invalid and not create any order because cpf 
     coupon: "VALE20_2"
   }
 
-  const data = await axios.post("http://localhost:3000/order", order)
-
-  expect(data.data.items).toBe(0);
-  expect(data.data.total).toBe(0);
-  expect(data.data.message).toBe('Invalid cpf');
+  expect(() => checkout.execute(order)).rejects.toThrow(new Error('Invalid cpf'));
 })
 
 test("Should not apply expired discount coupon", async function () {
@@ -85,10 +88,9 @@ test("Should not apply expired discount coupon", async function () {
     coupon: "VALE20"
   }
 
-  const response = await axios.post("http://localhost:3000/order", order)
-
-  expect(response.data.items).toBe(3);
-  expect(response.data.total).toBe(35000);
+  const response = await checkout.execute(order);
+  expect(response.items).toBe(3);
+  expect(response.total).toBe(35000);
 })
 
 test("Should not apply inexistence discount coupon", async function () {
@@ -102,10 +104,9 @@ test("Should not apply inexistence discount coupon", async function () {
     coupon: "VALE0"
   }
 
-  const data = await axios.post("http://localhost:3000/order", order)
-
-  expect(data.data.items).toBe(3);
-  expect(data.data.total).toBe(35000);
+  const response = await checkout.execute(order);
+  expect(response.items).toBe(3);
+  expect(response.total).toBe(35000);
 })
 
 test("Should not create order with negative quantity item", async function () {
@@ -119,10 +120,7 @@ test("Should not create order with negative quantity item", async function () {
     coupon: "VALE20"
   }
 
-  const response = await axios.post("http://localhost:3000/order", order)
-
-  expect(response.status).toBe(422)
-  expect(response.data.message).toBe('Invalid quantity!')
+  expect(() => checkout.execute(order)).rejects.toThrow(new Error('Invalid quantity!'));
 })
 
 test("Should not create order with duplicated items", async function () {
@@ -137,10 +135,7 @@ test("Should not create order with duplicated items", async function () {
     coupon: "VALE20"
   }
 
-  const response = await axios.post("http://localhost:3000/order", order)
-
-  expect(response.status).toBe(422)
-  expect(response.data.message).toBe('Order with duplicated items!')
+  expect(() => checkout.execute(order)).rejects.toThrow(new Error('Order with duplicated items!'));
 })
 
 test("Should not create order items that have negative measures", async function () {
@@ -152,10 +147,7 @@ test("Should not create order items that have negative measures", async function
     coupon: "VALE20_2"
   }
 
-  const response = await axios.post("http://localhost:3000/order", order)
-
-  expect(response.status).toBe(422)
-  expect(response.data.message).toBe('Order has items with negative measures!')
+  expect(() => checkout.execute(order)).rejects.toThrow(new Error('Order has items with negative measures!'));
 })
 
 test("Should not create order items that have negative weight", async function () {
@@ -167,10 +159,7 @@ test("Should not create order items that have negative weight", async function (
     coupon: "VALE20_2"
   }
 
-  const response = await axios.post("http://localhost:3000/order", order)
-
-  expect(response.status).toBe(422)
-  expect(response.data.message).toBe('Order has items with negative measures!')
+  expect(() => checkout.execute(order)).rejects.toThrow(new Error('Order has items with negative measures!'));
 })
 
 test('Should create an order with 3 items, associate discount coupon and calculate total amount(with discount over total amount)', async function () {
@@ -184,10 +173,9 @@ test('Should create an order with 3 items, associate discount coupon and calcula
     coupon: "VALE20_2"
   }
 
-  const data = await axios.post("http://localhost:3000/order", order)
-
-  expect(data.data.items).toBe(3);
-  expect(data.data.total).toBe(28000);
-  expect(data.data.fare).toBe(440)
-  expect(data.data.message).toBe('');
+  const response = await checkout.execute(order);
+  expect(response.items).toBe(3);
+  expect(response.total).toBe(28000);
+  expect(response.fare).toBe(440)
+  expect(response.message).toBe('');
 })
