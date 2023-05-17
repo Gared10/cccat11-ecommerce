@@ -1,12 +1,12 @@
 
-import pgp from "pg-promise";
-import OrderItem from "./OrderItem";
+
 import Order from "./Order";
 import { validate } from "./validateCPF";
 import ProductRepository from "./ProductRepository";
 import CouponRepository from "./CouponRespository";
 import ProductRepositoryDatabase from "./ProductRepositoryDatabase";
 import CouponRepositoryDatabase from "./CouponRepositoryDatabase";
+import Product from "./Product";
 
 export default class Checkout {
 
@@ -33,7 +33,8 @@ export default class Checkout {
         const productData = await this.productRepository.get(item.idProduct);
         if (order.getItems().find(element => element.getIdProduct() === item.idProduct)) throw new Error("Order with duplicated items!");
         if (productData.height <= 0 || productData.width <= 0 || productData.product_length <= 0 || productData.weight <= 0) throw new Error("Order has items with negative measures!");
-        order.addOrderItem(productData.description, item.quantity, productData.price, item.idProduct, productData.height, productData.weight, productData.width, productData.product_length);
+        const product: Product = new Product(productData.description, productData.price, productData.id_product, productData.height, productData.weight, productData.width, productData.product_length);
+        order.addOrderItem(item.quantity, product);
       }
       output.total = order.getTotal();
       output.fare = order.getTotalFare();

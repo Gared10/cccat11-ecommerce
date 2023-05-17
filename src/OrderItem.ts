@@ -1,31 +1,21 @@
+import Product from "./Product";
+
 export default class OrderItem {
 
-  private description: string;
   private quantity: number;
-  private price: number;
-  private idProduct: number;
-  private height: number;
-  private weight: number;
-  private width: number;
-  private product_length: number;
+  private product: Product;
 
-  constructor(description: string, quantity: number, price: number, idProduct: number, height: number, weight: number, width: number, product_length: number) {
-    this.description = description;
-    this.price = price;
+  constructor(quantity: number, product: Product) {
     this.quantity = quantity;
-    this.idProduct = idProduct;
-    this.height = height;
-    this.weight = weight;
-    this.width = width;
-    this.product_length = product_length;
+    this.product = product;
   }
 
   getItemTotal() {
-    return this.quantity * this.price;
+    return this.quantity * this.product.getPrice();
   }
 
   getDescription(): string {
-    return this.description;
+    return this.product.getDescription();
   }
 
   getQuantity(): number {
@@ -33,15 +23,15 @@ export default class OrderItem {
   }
 
   getPrice(): number {
-    return this.price;
+    return this.product.getPrice();
   }
 
   getIdProduct(): number {
-    return this.idProduct;
+    return this.product.getIdProduct();
   }
 
   getMeasures() {
-    return { weight: this.weight, height: this.height, width: this.width, product_length: this.product_length };
+    return { weight: this.product.getMeasures().weight, height: this.product.getMeasures().height, width: this.product.getMeasures().width, product_length: this.product.getMeasures().product_length };
   }
 
 }

@@ -1,4 +1,5 @@
 import OrderItem from "./OrderItem"
+import Product from "./Product"
 import { calculateFare } from "./calculateFare"
 
 export default class Order {
@@ -10,9 +11,9 @@ export default class Order {
     this.cpf = cpf
   }
 
-  addOrderItem(description: string, quantity: number, price: number, idProduct: number, height: number, weight: number, width: number, product_length: number): number | OrderItem[] {
-    const product = new OrderItem(description, quantity, price, idProduct, height, weight, width, product_length);
-    return this.items ? this.items.push(product) : this.items = [product];
+  addOrderItem(quantity: number, product: Product): number | OrderItem[] {
+    const item = new OrderItem(quantity, product);
+    return this.items ? this.items.push(item) : this.items = [item];
   }
 
   getItems(): OrderItem[] {
