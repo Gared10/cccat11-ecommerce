@@ -7,12 +7,15 @@ import CouponRepository from "./CouponRespository";
 import ProductRepositoryDatabase from "./ProductRepositoryDatabase";
 import CouponRepositoryDatabase from "./CouponRepositoryDatabase";
 import Product from "./Product";
+import OrderRepository from "./OrderRepository";
+import OrderRepositoryDatabase from "./OrderRepositoryDatabase";
 
 export default class Checkout {
 
   constructor(
     readonly productRepository: ProductRepository = new ProductRepositoryDatabase,
-    readonly couponRepository: CouponRepository = new CouponRepositoryDatabase
+    readonly couponRepository: CouponRepository = new CouponRepositoryDatabase,
+    readonly orderRepository: OrderRepository = new OrderRepositoryDatabase
   ) {
 
   }
@@ -27,7 +30,7 @@ export default class Checkout {
     let order: Order
     if (!validate(input.cpf)) throw new Error('Invalid cpf');
     if (input.items) {
-      order = new Order(input.cpf)
+      order = new Order(input.cpf, input.id)
       for (const item of input.items) {
         if (item.quantity <= 0) throw new Error("Invalid quantity!");
         const productData = await this.productRepository.get(item.idProduct);
@@ -46,6 +49,7 @@ export default class Checkout {
           output.total -= order.getTotal() * (parseFloat(couponData.percentage) / 100);
         }
       }
+      await this.orderRepository.save(order);
     }
     return output;
   }
@@ -53,6 +57,7 @@ export default class Checkout {
 }
 
 type Input = {
+  id: string,
   cpf: string,
   items: { idProduct: number, quantity: number }[],
   coupon?: string,

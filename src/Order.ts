@@ -3,12 +3,14 @@ import Product from "./Product"
 import { calculateFare } from "./calculateFare"
 
 export default class Order {
-  private cpf: string
-  private items: OrderItem[] | undefined
+  private cpf: string;
+  private id: string;
+  private items: OrderItem[] | undefined;
 
-  constructor(cpf: string, items?: OrderItem[]) {
-    this.items = items
-    this.cpf = cpf
+  constructor(cpf: string, id: string, items?: OrderItem[]) {
+    this.items = items;
+    this.cpf = cpf;
+    this.id = id;
   }
 
   addOrderItem(quantity: number, product: Product): number | OrderItem[] {
@@ -32,6 +34,10 @@ export default class Order {
     return this.cpf
   }
 
+  getId() {
+    return this.id;
+  }
+
   setItems(items: OrderItem[]): void {
     this.items = items;
   }
@@ -44,5 +50,12 @@ export default class Order {
       fare += calculateFare(productMeasures.height, productMeasures.width, productMeasures.product_length, productMeasures.weight)
     }
     return fare
+  }
+
+  getCode() {
+    const today = new Date();
+    const sequence = 1
+    const code = `${today.getFullYear()}${new String(sequence).padStart(8, "0")}`
+    return code;
   }
 }

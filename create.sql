@@ -21,3 +21,17 @@ create table ecommerce.coupon (
 );
 
 insert into ecommerce.coupon (code, percentage, expiration_date) values ('VALE20', 20, '2023-05-01 23:59:59');
+insert into ecommerce.coupon (code, percentage, expiration_date) values ('VALE20_2', 20, '2022-05-01 23:59:59');
+
+create table ecommerce.order_header (
+	id_order text,
+	code text,
+	cpf text
+)
+
+create table ecommerce.order_items (
+	id_product integer,
+	id_order text,
+	quantity numeric,
+	price numeric
+)
