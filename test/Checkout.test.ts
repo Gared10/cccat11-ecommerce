@@ -5,6 +5,7 @@ import CouponRepositoryDatabase from "../src/CouponRepositoryDatabase";
 import OrderRepositoryDatabase from "../src/OrderRepositoryDatabase";
 import GetOrder from "../src/GetOrder";
 import crypto from 'crypto';
+import OrderRepository from "../src/OrderRepository";
 
 axios.defaults.validateStatus = function () {
   return true;
@@ -12,12 +13,13 @@ axios.defaults.validateStatus = function () {
 
 let checkout: Checkout;
 let getOrder: GetOrder;
+let orderRepository: OrderRepository
 
 beforeEach(() => {
   const productRepository = new ProductRepositoryDatabase();
   const couponRepository = new CouponRepositoryDatabase();
   checkout = new Checkout(productRepository, couponRepository);
-  const orderRepository = new OrderRepositoryDatabase();
+  orderRepository = new OrderRepositoryDatabase();
   getOrder = new GetOrder(orderRepository);
 });
 
@@ -207,7 +209,8 @@ test('Should create an order with 3 items, associate discount coupon and calcula
   expect(response.message).toBe('');
 })
 
-test.only('Should create and persist an order', async function () {
+test('Should create and persist an order', async function () {
+  await orderRepository.clear();
   const uuid = crypto.randomUUID();
   const order = {
     id: uuid,
@@ -221,8 +224,26 @@ test.only('Should create and persist an order', async function () {
 
   await checkout.execute(order);
   const response = await getOrder.execute(uuid);
-  expect(response.items).toBe(3);
-  expect(response.total).toBe(28000);
-  expect(response.fare).toBe(440)
-  expect(response.message).toBe('');
+  expect(response.getItems().length).toBe(3);
+  expect(response.getTotal()).toBe(35000);
+  expect(response.getTotalFare()).toBe(440)
+  expect(response.getCode()).toBe("202300000001")
+
+  const order_id2 = crypto.randomUUID();
+  const order2 = {
+    id: order_id2,
+    cpf: "11144477735",
+    items: [
+      { "idProduct": 1, "quantity": 2 },
+      { "idProduct": 2, "quantity": 5 },
+      { "idProduct": 3, "quantity": 1 }
+    ],
+  }
+
+  await checkout.execute(order2);
+  const order2_ = await getOrder.execute(order_id2);
+  expect(order2_.getItems().length).toBe(3);
+  expect(order2_.getTotal()).toBe(35000);
+  expect(order2_.getTotalFare()).toBe(440)
+  expect(order2_.getCode()).toBe("202300000002")
 })
