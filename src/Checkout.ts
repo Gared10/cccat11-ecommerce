@@ -30,7 +30,9 @@ export default class Checkout {
     let order: Order
     if (!validate(input.cpf)) throw new Error('Invalid cpf');
     if (input.items) {
-      order = new Order(input.cpf, input.id)
+      let sequence = await this.orderRepository.count()
+      sequence++;
+      order = new Order(input.cpf, input.id, undefined, sequence)
       for (const item of input.items) {
         if (item.quantity <= 0) throw new Error("Invalid quantity!");
         const productData = await this.productRepository.get(item.idProduct);

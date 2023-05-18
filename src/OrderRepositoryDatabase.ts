@@ -9,25 +9,15 @@ export default class OrderRepositoryDatabase implements OrderRepository {
   async get(idOrder: string) {
     const connection = pgp()("postgres://postgres:postgres123@localhost:5432/app");
     const [orderData] = await connection.query('select * from ecommerce.order_header where id_order = $1', [idOrder]);
-    const [orderItemsData] = await connection.query('select * from ecommerce.order_items where id_order = $1', [idOrder]);
-    const order = new Order(orderData.cpf, orderData.id_order)
-    console.log(orderData)
-    console.log(orderItemsData)
+    const orderItemsData = await connection.query('select * from ecommerce.order_items where id_order = $1', [idOrder]);
+    const order = new Order(orderData.cpf, orderData.id_order, orderData.code)
     for (const item of orderItemsData) {
       const [productData] = await connection.query("select id_product, description, price, width, height, weight, product_length from ecommerce.product where id_product = $1", [item.id_product]);
       const product = new Product(productData.description, productData.price, productData.id_product, productData.height, productData.weight, productData.width, productData.product_length)
       order.addOrderItem(item.quantity, product)
     }
-
-    const output = {
-      total: order.getTotal(),
-      fare: order.getTotalFare(),
-      message: '',
-      items: order.getItems().length
-    }
-
     await connection.$pool.end();
-    return output;
+    return order;
   }
 
   async save(order: Order) {
@@ -44,5 +34,12 @@ export default class OrderRepositoryDatabase implements OrderRepository {
     const [orderData] = await connection.query('select count(1)::integer from ecommerce.order_header', []);
     await connection.$pool.end();
     return orderData.count
+  }
+
+  async clear() {
+    const connection = pgp()("postgres://postgres:postgres123@localhost:5432/app");
+    await connection.query('delete from ecommerce.order_header', []);
+    await connection.query('delete from ecommerce.order_items', []);
+    await connection.$pool.end();
   }
 }

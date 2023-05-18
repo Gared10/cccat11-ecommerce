@@ -1,3 +1,4 @@
+import Order from "./Order";
 import OrderRepositoryDatabase from "./OrderRepositoryDatabase";
 
 export default class GetOrder {
@@ -8,16 +9,9 @@ export default class GetOrder {
 
   }
 
-  async execute(uuid: string): Promise<Output> {
+  async execute(uuid: string): Promise<Order> {
     const orderData = await this.orderRepository.get(uuid);
     return orderData;
   }
-}
-
-type Output = {
-  total: number,
-  fare: number,
-  message: string,
-  items: number
 }
 

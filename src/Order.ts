@@ -5,12 +5,14 @@ import { calculateFare } from "./calculateFare"
 export default class Order {
   private cpf: string;
   private id: string;
+  private code: string;
   private items: OrderItem[] | undefined;
 
-  constructor(cpf: string, id: string, items?: OrderItem[]) {
+  constructor(cpf: string, id: string, code?: string, sequence?: number, items?: OrderItem[]) {
     this.items = items;
     this.cpf = cpf;
     this.id = id;
+    this.code = code ?? this.generateCode(sequence ?? 1);
   }
 
   addOrderItem(quantity: number, product: Product): number | OrderItem[] {
@@ -52,10 +54,13 @@ export default class Order {
     return fare
   }
 
-  getCode() {
+  generateCode(sequence: number) {
     const today = new Date();
-    const sequence = 1
     const code = `${today.getFullYear()}${new String(sequence).padStart(8, "0")}`
     return code;
+  }
+
+  getCode() {
+    return this.code;
   }
 }
