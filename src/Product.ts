@@ -1,21 +1,7 @@
 export default class Product {
 
-  private description: string;
-  private price: number;
-  private idProduct: number;
-  private height: number;
-  private weight: number;
-  private width: number;
-  private product_length: number;
-
-  constructor(description: string, price: number, idProduct: number, height: number, weight: number, width: number, product_length: number) {
-    this.description = description;
-    this.price = price;
-    this.idProduct = idProduct;
-    this.height = height;
-    this.weight = weight;
-    this.width = width;
-    this.product_length = product_length;
+  constructor(readonly description: string, readonly price: number, readonly idProduct: number, readonly height: number, readonly weight: number, readonly width: number, readonly product_length: number) {
+    if (height <= 0 || width <= 0 || product_length <= 0 || weight <= 0) throw new Error('Invalid measures!');
   }
 
   getDescription(): string {
@@ -32,6 +18,14 @@ export default class Product {
 
   getMeasures() {
     return { weight: this.weight, height: this.height, width: this.width, product_length: this.product_length };
+  }
+
+  getVolume() {
+    return this.height * this.width * this.product_length;
+  }
+
+  getDensity() {
+    return this.weight / this.getVolume();
   }
 
 }

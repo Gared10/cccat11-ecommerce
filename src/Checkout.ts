@@ -29,30 +29,23 @@ export default class Checkout {
     }
     let order: Order
     if (!validate(input.cpf)) throw new Error('Invalid cpf');
-    if (input.items) {
-      let sequence = await this.orderRepository.count()
-      sequence++;
-      order = new Order(input.cpf, input.id, undefined, sequence)
-      for (const item of input.items) {
-        if (item.quantity <= 0) throw new Error("Invalid quantity!");
-        const productData = await this.productRepository.get(item.idProduct);
-        if (order.getItems().find(element => element.getIdProduct() === item.idProduct)) throw new Error("Order with duplicated items!");
-        if (productData.height <= 0 || productData.width <= 0 || productData.product_length <= 0 || productData.weight <= 0) throw new Error("Order has items with negative measures!");
-        const product: Product = new Product(productData.description, productData.price, productData.id_product, productData.height, productData.weight, productData.width, productData.product_length);
-        order.addOrderItem(item.quantity, product);
-      }
-      output.total = order.getTotal();
-      output.fare = order.getTotalFare();
-      output.items = order.getItems().length;
-      if (input.coupon && output.items > 0) {
-        const couponData = await this.couponRepository.get(input.coupon);
-        const nowDate: Date = new Date();
-        if (couponData && couponData.expiration_date.getTime() > nowDate.getTime()) {
-          output.total -= order.getTotal() * (parseFloat(couponData.percentage) / 100);
-        }
-      }
-      await this.orderRepository.save(order);
+    let sequence = await this.orderRepository.count()
+    sequence++;
+    order = new Order(input.cpf, input.id, undefined, sequence)
+    for (const item of input.items) {
+      const product = await this.productRepository.get(item.idProduct);
+      order.addOrderItem(item.quantity, product);
     }
+    if (input.coupon) {
+      const coupon = await this.couponRepository.get(input.coupon);
+      if (coupon) {
+        order.addCoupon(coupon);
+      }
+    }
+    output.total = order.getTotal();
+    output.fare = order.getTotalFare();
+    output.items = order.getItems().length;
+    await this.orderRepository.save(order);
     return output;
   }
 

@@ -138,7 +138,7 @@ test("Should not create order with duplicated items", async function () {
   const response = await axios.post("http://localhost:3000/checkout", order)
 
   expect(response.status).toBe(422)
-  expect(response.data.message).toBe('Order with duplicated items!')
+  expect(response.data.message).toBe('Duplicated item!')
 })
 
 test("Should not create order items that have negative measures", async function () {
@@ -153,7 +153,7 @@ test("Should not create order items that have negative measures", async function
   const response = await axios.post("http://localhost:3000/checkout", order)
 
   expect(response.status).toBe(422)
-  expect(response.data.message).toBe('Order has items with negative measures!')
+  expect(response.data.message).toBe('Invalid measures!')
 })
 
 test("Should not create order items that have negative weight", async function () {
@@ -168,7 +168,7 @@ test("Should not create order items that have negative weight", async function (
   const response = await axios.post("http://localhost:3000/checkout", order)
 
   expect(response.status).toBe(422)
-  expect(response.data.message).toBe('Order has items with negative measures!')
+  expect(response.data.message).toBe('Invalid measures!')
 })
 
 test('Should create an order with 3 items, associate discount coupon and calculate total amount(with discount over total amount)', async function () {

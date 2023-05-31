@@ -158,7 +158,7 @@ test("Should not create order with duplicated items", async function () {
     coupon: "VALE20"
   }
 
-  expect(() => checkout.execute(order)).rejects.toThrow(new Error('Order with duplicated items!'));
+  expect(() => checkout.execute(order)).rejects.toThrow(new Error('Duplicated item!'));
 })
 
 test("Should not create order items that have negative measures", async function () {
@@ -172,7 +172,7 @@ test("Should not create order items that have negative measures", async function
     coupon: "VALE20_2"
   }
 
-  expect(() => checkout.execute(order)).rejects.toThrow(new Error('Order has items with negative measures!'));
+  expect(() => checkout.execute(order)).rejects.toThrow(new Error('Invalid measures!'));
 })
 
 test("Should not create order items that have negative weight", async function () {
@@ -186,7 +186,7 @@ test("Should not create order items that have negative weight", async function (
     coupon: "VALE20_2"
   }
 
-  expect(() => checkout.execute(order)).rejects.toThrow(new Error('Order has items with negative measures!'));
+  expect(() => checkout.execute(order)).rejects.toThrow(new Error('Invalid measures!'));
 })
 
 test('Should create an order with 3 items, associate discount coupon and calculate total amount(with discount over total amount)', async function () {

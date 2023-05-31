@@ -1,6 +1,8 @@
-export function calculateFare(height: number, width: number, product_length: number, weight: number): number {
-  const volume: number = height * width * product_length;
-  const density: number = weight / volume;
+import Product from "./Product";
+
+export function calculateFare(product: Product): number {
+  const volume: number = product.getVolume();
+  const density: number = product.getDensity();
   const fare: number = 1000 * volume * (density / 100);
 
   return fare >= 10 ? Math.round(fare) : 10;

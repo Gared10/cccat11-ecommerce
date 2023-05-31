@@ -6,6 +6,7 @@ export default class OrderItem {
   private product: Product;
 
   constructor(quantity: number, product: Product) {
+    if (quantity <= 0) throw new Error("Invalid quantity!");
     this.quantity = quantity;
     this.product = product;
   }
@@ -32,6 +33,10 @@ export default class OrderItem {
 
   getMeasures() {
     return { weight: this.product.getMeasures().weight, height: this.product.getMeasures().height, width: this.product.getMeasures().width, product_length: this.product.getMeasures().product_length };
+  }
+
+  getProduct(): Product {
+    return this.product;
   }
 
 }

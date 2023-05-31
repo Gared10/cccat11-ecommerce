@@ -17,7 +17,7 @@ export default class SimulateFare {
     if (input.from && input.to) {
       for (const item of input.items) {
         const productData = await this.productRepository.get(item.idProduct)
-        output.fare += calculateFare(productData.height, productData.width, productData.product_length, productData.weight)
+        output.fare += calculateFare(productData)
       }
     }
     return output;

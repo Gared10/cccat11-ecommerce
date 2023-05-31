@@ -1,3 +1,4 @@
+import Coupon from "./Coupon";
 import OrderItem from "./OrderItem"
 import Product from "./Product"
 import { calculateFare } from "./calculateFare"
@@ -6,30 +7,36 @@ export default class Order {
   private cpf: string;
   private id: string;
   private code: string;
-  private items: OrderItem[] | undefined;
+  private items: OrderItem[];
+  coupon?: Coupon;
 
-  constructor(cpf: string, id: string, code?: string, sequence?: number, items?: OrderItem[]) {
-    this.items = items;
+  constructor(cpf: string, id: string, code?: string, sequence?: number, items?: OrderItem[], readonly date: Date = new Date()) {
+    this.items = items ?? [];
     this.cpf = cpf;
     this.id = id;
     this.code = code ?? this.generateCode(sequence ?? 1);
   }
 
-  addOrderItem(quantity: number, product: Product): number | OrderItem[] {
-    const item = new OrderItem(quantity, product);
-    return this.items ? this.items.push(item) : this.items = [item];
+  addOrderItem(quantity: number, product: Product) {
+    if (this.items.find(item => item.getIdProduct() === product.idProduct)) throw new Error("Duplicated item!");
+    this.items.push(new OrderItem(quantity, product));
+  }
+
+  addCoupon(coupon: Coupon) {
+    if (coupon.isValid(this.date)) this.coupon = coupon;
   }
 
   getItems(): OrderItem[] {
-    return this.items ? this.items : [];
+    return this.items;
   }
 
   getTotal(): number {
-    let totalAmount: number = 0
-    this.items?.map((item: OrderItem) => {
-      totalAmount += item.getItemTotal();
+    let total: number = 0
+    this.items.map((item: OrderItem) => {
+      total += item.getItemTotal();
     })
-    return totalAmount;
+    if (this.coupon) total -= this.coupon.calculateDiscount(total);
+    return total;
   }
 
   getCpf(): string {
@@ -45,11 +52,10 @@ export default class Order {
   }
 
   getTotalFare(): number {
-    const items: OrderItem[] = this.items ?? [];
+    const items: OrderItem[] = this.items;
     let fare: number = 0;
     for (const item of items) {
-      let productMeasures = item.getMeasures()
-      fare += calculateFare(productMeasures.height, productMeasures.width, productMeasures.product_length, productMeasures.weight)
+      fare += calculateFare(item.getProduct())
     }
     return fare
   }

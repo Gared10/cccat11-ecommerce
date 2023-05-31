@@ -3,8 +3,12 @@ import pgp from "pg-promise";
 import OrderRepository from "./OrderRepository";
 import ProductRepositoryDatabase from "./ProductRepositoryDatabase";
 import Product from "./Product";
+import ProductRepository from "./ProductRepository";
 
 export default class OrderRepositoryDatabase implements OrderRepository {
+
+  constructor(readonly productRepository: ProductRepository = new ProductRepositoryDatabase) {
+  }
 
   async get(idOrder: string) {
     const connection = pgp()("postgres://postgres:postgres123@localhost:5432/app");
@@ -12,9 +16,8 @@ export default class OrderRepositoryDatabase implements OrderRepository {
     const orderItemsData = await connection.query('select * from ecommerce.order_items where id_order = $1', [idOrder]);
     const order = new Order(orderData.cpf, orderData.id_order, orderData.code)
     for (const item of orderItemsData) {
-      const [productData] = await connection.query("select id_product, description, price, width, height, weight, product_length from ecommerce.product where id_product = $1", [item.id_product]);
-      const product = new Product(productData.description, productData.price, productData.id_product, productData.height, productData.weight, productData.width, productData.product_length)
-      order.addOrderItem(item.quantity, product)
+      const product = await this.productRepository.get(item.id_product);
+      order.addOrderItem(item.quantity, product);
     }
     await connection.$pool.end();
     return order;
