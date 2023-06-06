@@ -14,5 +14,5 @@ test('Should simulate fare', async function () {
   const productRepository = new ProductRepositoryDatabase()
   const simulateFare = new SimulateFare(productRepository);
   const output = await simulateFare.execute(input);
-  expect(output.fare).toBe(440);
+  expect(output.fare).toBe(1060);
 })

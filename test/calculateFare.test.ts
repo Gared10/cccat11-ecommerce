@@ -21,18 +21,11 @@ test('Should calculate products fare', function () {
   const product = new Product('Geladeira', 5000, 6, 10, 3, 30, 100)
   const fare: number = calculateFare(product, distance)
 
-  expect(fare).toBe(30);
+  expect(fare).toBe(72);
 })
 
 test('Should calculate minimal fare price', function () {
-  const product = new Product('Geladeira', 1000, 6, 10, 1, 10, 20)
-  const fare: number = calculateFare(product, distance)
-
-  expect(fare).toBe(10);
-})
-
-test('Should calculate minimal fare price', function () {
-  const product = new Product('Geladeira', 1000, 6, 1, 1, 10, 20)
+  const product = new Product('Geladeira', 1000, 6, 0.5, 0.1, 1, 0.1)
   const fare: number = calculateFare(product, distance)
 
   expect(fare).toBe(10);

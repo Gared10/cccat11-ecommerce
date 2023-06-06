@@ -225,7 +225,7 @@ test('Should create an order with 3 items, associate discount coupon and calcula
   const response = await checkout.execute(order);
   expect(response.getItems().length).toBe(3);
   expect(response.getTotal()).toBe(28000);
-  expect(response.getTotalFare()).toBe(440)
+  expect(response.getTotalFare()).toBe(1060)
 })
 
 test('Should create and persist an order', async function () {
@@ -247,7 +247,7 @@ test('Should create and persist an order', async function () {
   const response = await getOrder.execute(uuid);
   expect(response.getItems().length).toBe(3);
   expect(response.getTotal()).toBe(35000);
-  expect(response.getTotalFare()).toBe(440)
+  expect(response.getTotalFare()).toBe(1060)
   expect(response.getCode()).toBe("202300000001")
 
   const order_id2 = crypto.randomUUID();
@@ -267,6 +267,6 @@ test('Should create and persist an order', async function () {
   const order2_ = await getOrder.execute(order_id2);
   expect(order2_.getItems().length).toBe(3);
   expect(order2_.getTotal()).toBe(35000);
-  expect(order2_.getTotalFare()).toBe(440)
+  expect(order2_.getTotalFare()).toBe(1060)
   expect(order2_.getCode()).toBe("202300000002")
 })

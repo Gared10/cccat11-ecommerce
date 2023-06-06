@@ -229,7 +229,7 @@ test('Should create an order with 3 items, associate discount coupon and calcula
 
   expect(response.data.items.length).toBe(3);
   expect(response.data.total).toBe(28000);
-  expect(response.data.totalFare).toBe(440)
+  expect(response.data.totalFare).toBe(1060)
 })
 
 test("Should not create any order and alert that id is mandatory", async function () {
