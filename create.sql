@@ -26,7 +26,9 @@ insert into ecommerce.coupon (code, percentage, expiration_date) values ('VALE20
 create table ecommerce.order_header (
 	id_order text,
 	code text,
-	cpf text
+	cpf text,
+	fromcep text,
+	tocep text
 )
 
 create table ecommerce.order_items (
@@ -35,3 +37,12 @@ create table ecommerce.order_items (
 	quantity numeric,
 	price numeric
 )
+
+create table ecommerce.location(
+	CEP text,
+	latitude numeric,
+	longitude numeric
+)
+
+insert into ecommerce.location(CEP, latitude, longitude) values("88015600", -27.5906685, -48.5605664)
+insert into ecommerce.location(CEP, latitude, longitude) values("22030060", -9.610394, -35.725652)
