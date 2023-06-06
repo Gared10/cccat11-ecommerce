@@ -81,4 +81,12 @@ export default class Order {
   getCode() {
     return this.code;
   }
+
+  getFromCEP() {
+    return this.fromCEP.CEP;
+  }
+
+  getToCEP() {
+    return this.toCEP.CEP;
+  }
 }
