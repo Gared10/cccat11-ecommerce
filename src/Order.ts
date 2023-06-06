@@ -1,4 +1,6 @@
 import Coupon from "./Coupon";
+import DistanceCalculator from "./DistanceCalculator";
+import Location from "./Location";
 import OrderItem from "./OrderItem"
 import Product from "./Product"
 import { calculateFare } from "./calculateFare"
@@ -12,7 +14,7 @@ export default class Order {
   private total: number;
   private totalFare: number;
 
-  constructor(cpf: string, id: string, code?: string, sequence?: number, items?: OrderItem[], readonly date: Date = new Date()) {
+  constructor(cpf: string, id: string, readonly fromCEP: Location, readonly toCEP: Location, code?: string, sequence?: number, items?: OrderItem[], readonly date: Date = new Date()) {
     if (!id) throw new Error("Order's id is mandatory")
     this.items = items ?? [];
     this.cpf = cpf;
@@ -63,8 +65,9 @@ export default class Order {
   getTotalFare(): number {
     const items: OrderItem[] = this.items;
     let fare: number = 0;
+    const distance = DistanceCalculator.calculate(this.fromCEP.getCoords(), this.toCEP.getCoords());
     for (const item of items) {
-      fare += calculateFare(item.getProduct())
+      fare += calculateFare(item.getProduct(), distance)
     }
     return fare
   }
