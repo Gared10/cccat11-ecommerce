@@ -13,6 +13,7 @@ export default class Order {
   private totalFare: number;
 
   constructor(cpf: string, id: string, code?: string, sequence?: number, items?: OrderItem[], readonly date: Date = new Date()) {
+    if (!id) throw new Error("Order's id is mandatory")
     this.items = items ?? [];
     this.cpf = cpf;
     this.id = id;

@@ -36,7 +36,7 @@ export default class Checkout {
         order.addCoupon(coupon);
       }
     }
-    await this.orderRepository.save(order);
+    if (order.getItems().length > 0) await this.orderRepository.save(order);
     return order;
   }
 
