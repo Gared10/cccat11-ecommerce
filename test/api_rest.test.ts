@@ -224,3 +224,34 @@ test("Should not create any order and alert that id is mandatory", async functio
   const response = await axios.post("http://localhost:3000/checkout", order);
   expect(response.data.message).toBe("Order's id is mandatory");
 })
+
+test("Should list all orders in database", async function () {
+  const uuid = crypto.randomUUID();
+  const uuid1 = crypto.randomUUID();
+  const order = {
+    id: uuid,
+    cpf: "11144477735",
+    items: [
+      { "idProduct": 1, "quantity": 2 },
+      { "idProduct": 2, "quantity": 5 },
+      { "idProduct": 3, "quantity": 1 }
+    ],
+  }
+
+  const order1 = {
+    id: uuid1,
+    cpf: "11144477735",
+    items: [
+      { "idProduct": 1, "quantity": 2 },
+      { "idProduct": 2, "quantity": 5 },
+      { "idProduct": 3, "quantity": 2 }
+    ],
+  }
+
+  const response1 = await axios.post("http://localhost:3000/checkout", order);
+  const response2 = await axios.post("http://localhost:3000/checkout", order1);
+  const response = await axios.post("http://localhost:3000/list");
+
+  expect(response.data.length).toBeGreaterThan(1);
+
+})
