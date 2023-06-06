@@ -36,9 +36,8 @@ test('Should create an order with 3 items and calculate total amount', async fun
   }
 
   const response = await checkout.execute(order);
-  expect(response.items).toBe(3);
-  expect(response.total).toBe(35000);
-  expect(response.message).toBe('');
+  expect(response.getItems().length).toBe(3);
+  expect(response.getTotal()).toBe(35000);
 })
 
 test('Should create an order with 3 items, associate discount coupon and calculate total amount(with discount over total amount)', async function () {
@@ -55,9 +54,8 @@ test('Should create an order with 3 items, associate discount coupon and calcula
   }
 
   const response = await checkout.execute(order);
-  expect(response.items).toBe(3);
-  expect(response.total).toBe(28000);
-  expect(response.message).toBe('');
+  expect(response.getItems().length).toBe(3);
+  expect(response.getTotal()).toBe(28000);
 })
 
 test('Should alert that the cpf is invalid and not create any order', async function () {
@@ -106,8 +104,8 @@ test("Should not apply expired discount coupon", async function () {
   }
 
   const response = await checkout.execute(order);
-  expect(response.items).toBe(3);
-  expect(response.total).toBe(35000);
+  expect(response.getItems().length).toBe(3);
+  expect(response.getTotal()).toBe(35000);
 })
 
 test("Should not apply inexistence discount coupon", async function () {
@@ -124,8 +122,8 @@ test("Should not apply inexistence discount coupon", async function () {
   }
 
   const response = await checkout.execute(order);
-  expect(response.items).toBe(3);
-  expect(response.total).toBe(35000);
+  expect(response.getItems().length).toBe(3);
+  expect(response.getTotal()).toBe(35000);
 })
 
 test("Should not create order with negative quantity item", async function () {
@@ -203,10 +201,9 @@ test('Should create an order with 3 items, associate discount coupon and calcula
   }
 
   const response = await checkout.execute(order);
-  expect(response.items).toBe(3);
-  expect(response.total).toBe(28000);
-  expect(response.fare).toBe(440)
-  expect(response.message).toBe('');
+  expect(response.getItems().length).toBe(3);
+  expect(response.getTotal()).toBe(28000);
+  expect(response.getTotalFare()).toBe(440)
 })
 
 test('Should create and persist an order', async function () {

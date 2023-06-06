@@ -20,13 +20,7 @@ export default class Checkout {
 
   }
 
-  async execute(input: Input): Promise<Output> {
-    const output: Output = {
-      total: 0,
-      fare: 0,
-      message: '',
-      items: 0
-    }
+  async execute(input: Input): Promise<Order> {
     let order: Order
     if (!validate(input.cpf)) throw new Error('Invalid cpf');
     let sequence = await this.orderRepository.count()
@@ -42,11 +36,8 @@ export default class Checkout {
         order.addCoupon(coupon);
       }
     }
-    output.total = order.getTotal();
-    output.fare = order.getTotalFare();
-    output.items = order.getItems().length;
     await this.orderRepository.save(order);
-    return output;
+    return order;
   }
 
 }
@@ -58,11 +49,4 @@ type Input = {
   coupon?: string,
   from?: string,
   to?: string
-}
-
-type Output = {
-  total: number,
-  fare: number,
-  message: string,
-  items: number
 }

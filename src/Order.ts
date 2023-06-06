@@ -9,21 +9,29 @@ export default class Order {
   private code: string;
   private items: OrderItem[];
   coupon?: Coupon;
+  private total: number;
+  private totalFare: number;
 
   constructor(cpf: string, id: string, code?: string, sequence?: number, items?: OrderItem[], readonly date: Date = new Date()) {
     this.items = items ?? [];
     this.cpf = cpf;
     this.id = id;
     this.code = code ?? this.generateCode(sequence ?? 1);
+    this.total = 0;
+    this.totalFare = 0;
   }
 
   addOrderItem(quantity: number, product: Product) {
     if (this.items.find(item => item.getIdProduct() === product.idProduct)) throw new Error("Duplicated item!");
     this.items.push(new OrderItem(quantity, product));
+    this.total = this.getTotal();
+    this.totalFare = this.getTotalFare()
   }
 
   addCoupon(coupon: Coupon) {
     if (coupon.isValid(this.date)) this.coupon = coupon;
+    this.total = this.getTotal();
+    this.totalFare = this.getTotalFare()
   }
 
   getItems(): OrderItem[] {

@@ -16,9 +16,8 @@ test('Should create an order with 3 items and calculate total amount', async fun
 
   const response = await axios.post("http://localhost:3000/checkout", order)
 
-  expect(response.data.items).toBe(3);
+  expect(response.data.items.length).toBe(3);
   expect(response.data.total).toBe(35000);
-  expect(response.data.message).toBe('');
 })
 
 test('Should create an order with 3 items, associate discount coupon and calculate total amount(with discount over total amount)', async function () {
@@ -34,9 +33,8 @@ test('Should create an order with 3 items, associate discount coupon and calcula
 
   const response = await axios.post("http://localhost:3000/checkout", order)
 
-  expect(response.data.items).toBe(3);
+  expect(response.data.items.length).toBe(3);
   expect(response.data.total).toBe(28000);
-  expect(response.data.message).toBe('');
 })
 
 test('Should alert that the cpf is invalid and not create any order', async function () {
@@ -85,7 +83,7 @@ test("Should not apply expired discount coupon", async function () {
 
   const response = await axios.post("http://localhost:3000/checkout", order)
 
-  expect(response.data.items).toBe(3);
+  expect(response.data.items.length).toBe(3);
   expect(response.data.total).toBe(35000);
 })
 
@@ -102,7 +100,7 @@ test("Should not apply inexistence discount coupon", async function () {
 
   const response = await axios.post("http://localhost:3000/checkout", order)
 
-  expect(response.data.items).toBe(3);
+  expect(response.data.items.length).toBe(3);
   expect(response.data.total).toBe(35000);
 })
 
@@ -184,8 +182,7 @@ test('Should create an order with 3 items, associate discount coupon and calcula
 
   const response = await axios.post("http://localhost:3000/checkout", order)
 
-  expect(response.data.items).toBe(3);
+  expect(response.data.items.length).toBe(3);
   expect(response.data.total).toBe(28000);
-  expect(response.data.fare).toBe(440)
-  expect(response.data.message).toBe('');
+  expect(response.data.totalFare).toBe(440)
 })
