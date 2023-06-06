@@ -1,23 +1,39 @@
+import Coord from "../src/Coord";
+import DistanceCalculator from "../src/DistanceCalculator";
 import Product from "../src/Product"
 import { calculateFare } from "../src/calculateFare"
 
+let fromLocation;
+let toLocation;
+let from: Coord;
+let to: Coord;
+let distance: number;
+
+beforeEach(() => {
+  fromLocation = { CEP: "88015600", latitude: -27.5906685, longitude: -48.5605664 };
+  toLocation = { CEP: "22030060", latitude: -9.610394, longitude: -35.725652 };
+  from = new Coord(fromLocation.latitude, fromLocation.longitude);
+  to = new Coord(toLocation.latitude, toLocation.longitude);
+  distance = DistanceCalculator.calculate(from, to);
+})
+
 test('Should calculate products fare', function () {
   const product = new Product('Geladeira', 5000, 6, 10, 3, 30, 100)
-  const fare: number = calculateFare(product)
+  const fare: number = calculateFare(product, distance)
 
   expect(fare).toBe(30);
 })
 
 test('Should calculate minimal fare price', function () {
   const product = new Product('Geladeira', 1000, 6, 10, 1, 10, 20)
-  const fare: number = calculateFare(product)
+  const fare: number = calculateFare(product, distance)
 
   expect(fare).toBe(10);
 })
 
 test('Should calculate minimal fare price', function () {
   const product = new Product('Geladeira', 1000, 6, 1, 1, 10, 20)
-  const fare: number = calculateFare(product)
+  const fare: number = calculateFare(product, distance)
 
   expect(fare).toBe(10);
 })

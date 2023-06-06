@@ -8,8 +8,8 @@ test('Should simulate fare', async function () {
       { "idProduct": 2, "quantity": 5 },
       { "idProduct": 3, "quantity": 1 }
     ],
-    from: "88015600",
-    to: "22030060"
+    from: { CEP: "88015600", latitude: -27.5906685, longitude: -48.5605664 },
+    to: { CEP: "22030060", latitude: -9.610394, longitude: -35.725652 }
   }
   const productRepository = new ProductRepositoryDatabase()
   const simulateFare = new SimulateFare(productRepository);
