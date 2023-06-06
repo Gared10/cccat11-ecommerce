@@ -23,6 +23,24 @@ export default class OrderRepositoryDatabase implements OrderRepository {
     return order;
   }
 
+  async list(): Promise<Order[]> {
+    const connection = pgp()("postgres://postgres:postgres123@localhost:5432/app");
+    let orders: Order[] = []
+    const orderData = await connection.query('select * from ecommerce.order_header order by id_order');
+    const orderItemsData = await connection.query('select * from ecommerce.order_items order by id_order');
+    for (const orderHeader of orderData) {
+      const order: Order = new Order(orderHeader.cpf, orderHeader.id_order, orderHeader.code)
+      for (const item of orderItemsData) {
+        if (item.id_order === order.getId()) {
+          const product = await this.productRepository.get(item.id_product);
+          order.addOrderItem(item.quantity, product);
+        }
+      }
+      if (order.getItems().length > 0) orders.push(order);
+    }
+    return orders
+  }
+
   async save(order: Order) {
     const connection = pgp()("postgres://postgres:postgres123@localhost:5432/app");
     for (const item of order.getItems()) {
