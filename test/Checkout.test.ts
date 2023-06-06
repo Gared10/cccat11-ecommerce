@@ -33,6 +33,8 @@ test('Should create an order with 3 items and calculate total amount', async fun
       { "idProduct": 2, "quantity": 5 },
       { "idProduct": 3, "quantity": 1 }
     ],
+    from: { CEP: "88015600", latitude: -27.5906685, longitude: -48.5605664 },
+    to: { CEP: "22030060", latitude: -9.610394, longitude: -35.725652 }
   }
 
   const response = await checkout.execute(order);
@@ -50,7 +52,9 @@ test('Should create an order with 3 items, associate discount coupon and calcula
       { "idProduct": 2, "quantity": 5 },
       { "idProduct": 3, "quantity": 1 }
     ],
-    coupon: "VALE20_2"
+    coupon: "VALE20_2",
+    from: { CEP: "88015600", latitude: -27.5906685, longitude: -48.5605664 },
+    to: { CEP: "22030060", latitude: -9.610394, longitude: -35.725652 }
   }
 
   const response = await checkout.execute(order);
@@ -68,7 +72,9 @@ test('Should alert that the cpf is invalid and not create any order', async func
       { "idProduct": 2, "quantity": 5 },
       { "idProduct": 3, "quantity": 1 }
     ],
-    coupon: "VALE20_2"
+    coupon: "VALE20_2",
+    from: { CEP: "88015600", latitude: -27.5906685, longitude: -48.5605664 },
+    to: { CEP: "22030060", latitude: -9.610394, longitude: -35.725652 }
   }
 
   expect(() => checkout.execute(order)).rejects.toThrow(new Error('Invalid cpf'));
@@ -84,7 +90,9 @@ test('Should alert that the cpf is invalid and not create any order because cpf 
       { "idProduct": 2, "quantity": 5 },
       { "idProduct": 3, "quantity": 1 }
     ],
-    coupon: "VALE20_2"
+    coupon: "VALE20_2",
+    from: { CEP: "88015600", latitude: -27.5906685, longitude: -48.5605664 },
+    to: { CEP: "22030060", latitude: -9.610394, longitude: -35.725652 }
   }
 
   expect(() => checkout.execute(order)).rejects.toThrow(new Error('Invalid cpf'));
@@ -100,7 +108,9 @@ test("Should not apply expired discount coupon", async function () {
       { "idProduct": 2, "quantity": 5 },
       { "idProduct": 3, "quantity": 1 }
     ],
-    coupon: "VALE20"
+    coupon: "VALE20",
+    from: { CEP: "88015600", latitude: -27.5906685, longitude: -48.5605664 },
+    to: { CEP: "22030060", latitude: -9.610394, longitude: -35.725652 }
   }
 
   const response = await checkout.execute(order);
@@ -118,7 +128,9 @@ test("Should not apply inexistence discount coupon", async function () {
       { "idProduct": 2, "quantity": 5 },
       { "idProduct": 3, "quantity": 1 }
     ],
-    coupon: "VALE0"
+    coupon: "VALE0",
+    from: { CEP: "88015600", latitude: -27.5906685, longitude: -48.5605664 },
+    to: { CEP: "22030060", latitude: -9.610394, longitude: -35.725652 }
   }
 
   const response = await checkout.execute(order);
@@ -136,7 +148,9 @@ test("Should not create order with negative quantity item", async function () {
       { "idProduct": 2, "quantity": -5 },
       { "idProduct": 3, "quantity": 1 }
     ],
-    coupon: "VALE20"
+    coupon: "VALE20",
+    from: { CEP: "88015600", latitude: -27.5906685, longitude: -48.5605664 },
+    to: { CEP: "22030060", latitude: -9.610394, longitude: -35.725652 }
   }
 
   expect(() => checkout.execute(order)).rejects.toThrow(new Error('Invalid quantity!'));
@@ -153,7 +167,9 @@ test("Should not create order with duplicated items", async function () {
       { "idProduct": 2, "quantity": 5 },
       { "idProduct": 3, "quantity": 1 }
     ],
-    coupon: "VALE20"
+    coupon: "VALE20",
+    from: { CEP: "88015600", latitude: -27.5906685, longitude: -48.5605664 },
+    to: { CEP: "22030060", latitude: -9.610394, longitude: -35.725652 }
   }
 
   expect(() => checkout.execute(order)).rejects.toThrow(new Error('Duplicated item!'));
@@ -167,7 +183,9 @@ test("Should not create order items that have negative measures", async function
     items: [
       { "idProduct": 4, "quantity": 2 },
     ],
-    coupon: "VALE20_2"
+    coupon: "VALE20_2",
+    from: { CEP: "88015600", latitude: -27.5906685, longitude: -48.5605664 },
+    to: { CEP: "22030060", latitude: -9.610394, longitude: -35.725652 }
   }
 
   expect(() => checkout.execute(order)).rejects.toThrow(new Error('Invalid measures!'));
@@ -181,7 +199,9 @@ test("Should not create order items that have negative weight", async function (
     items: [
       { "idProduct": 4, "quantity": 2 },
     ],
-    coupon: "VALE20_2"
+    coupon: "VALE20_2",
+    from: { CEP: "88015600", latitude: -27.5906685, longitude: -48.5605664 },
+    to: { CEP: "22030060", latitude: -9.610394, longitude: -35.725652 }
   }
 
   expect(() => checkout.execute(order)).rejects.toThrow(new Error('Invalid measures!'));
@@ -197,7 +217,9 @@ test('Should create an order with 3 items, associate discount coupon and calcula
       { "idProduct": 2, "quantity": 5 },
       { "idProduct": 3, "quantity": 1 }
     ],
-    coupon: "VALE20_2"
+    coupon: "VALE20_2",
+    from: { CEP: "88015600", latitude: -27.5906685, longitude: -48.5605664 },
+    to: { CEP: "22030060", latitude: -9.610394, longitude: -35.725652 }
   }
 
   const response = await checkout.execute(order);
@@ -217,6 +239,8 @@ test('Should create and persist an order', async function () {
       { "idProduct": 2, "quantity": 5 },
       { "idProduct": 3, "quantity": 1 }
     ],
+    from: { CEP: "88015600", latitude: -27.5906685, longitude: -48.5605664 },
+    to: { CEP: "22030060", latitude: -9.610394, longitude: -35.725652 }
   }
 
   await checkout.execute(order);
@@ -235,6 +259,8 @@ test('Should create and persist an order', async function () {
       { "idProduct": 2, "quantity": 5 },
       { "idProduct": 3, "quantity": 1 }
     ],
+    from: { CEP: "88015600", latitude: -27.5906685, longitude: -48.5605664 },
+    to: { CEP: "22030060", latitude: -9.610394, longitude: -35.725652 }
   }
 
   await checkout.execute(order2);

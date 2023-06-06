@@ -15,6 +15,8 @@ test('Should create an order with 3 items and calculate total amount', async fun
       { "idProduct": 2, "quantity": 5 },
       { "idProduct": 3, "quantity": 1 }
     ],
+    from: { CEP: "88015600", latitude: -27.5906685, longitude: -48.5605664 },
+    to: { CEP: "22030060", latitude: -9.610394, longitude: -35.725652 }
   }
 
   const response = await axios.post("http://localhost:3000/checkout", order)
@@ -33,7 +35,9 @@ test('Should create an order with 3 items, associate discount coupon and calcula
       { "idProduct": 2, "quantity": 5 },
       { "idProduct": 3, "quantity": 1 }
     ],
-    coupon: "VALE20_2"
+    coupon: "VALE20_2",
+    from: { CEP: "88015600", latitude: -27.5906685, longitude: -48.5605664 },
+    to: { CEP: "22030060", latitude: -9.610394, longitude: -35.725652 }
   }
 
   const response = await axios.post("http://localhost:3000/checkout", order)
@@ -52,7 +56,9 @@ test('Should alert that the cpf is invalid and not create any order', async func
       { "idProduct": 2, "quantity": 5 },
       { "idProduct": 3, "quantity": 1 }
     ],
-    coupon: "VALE20_2"
+    coupon: "VALE20_2",
+    from: { CEP: "88015600", latitude: -27.5906685, longitude: -48.5605664 },
+    to: { CEP: "22030060", latitude: -9.610394, longitude: -35.725652 }
   }
 
   const response = await axios.post("http://localhost:3000/checkout", order)
@@ -70,7 +76,9 @@ test('Should alert that the cpf is invalid and not create any order because cpf 
       { "idProduct": 2, "quantity": 5 },
       { "idProduct": 3, "quantity": 1 }
     ],
-    coupon: "VALE20_2"
+    coupon: "VALE20_2",
+    from: { CEP: "88015600", latitude: -27.5906685, longitude: -48.5605664 },
+    to: { CEP: "22030060", latitude: -9.610394, longitude: -35.725652 }
   }
 
   const response = await axios.post("http://localhost:3000/checkout", order)
@@ -89,7 +97,9 @@ test("Should not apply expired discount coupon", async function () {
       { "idProduct": 2, "quantity": 5 },
       { "idProduct": 3, "quantity": 1 }
     ],
-    coupon: "VALE20"
+    coupon: "VALE20",
+    from: { CEP: "88015600", latitude: -27.5906685, longitude: -48.5605664 },
+    to: { CEP: "22030060", latitude: -9.610394, longitude: -35.725652 }
   }
 
   const response = await axios.post("http://localhost:3000/checkout", order)
@@ -108,7 +118,9 @@ test("Should not apply inexistence discount coupon", async function () {
       { "idProduct": 2, "quantity": 5 },
       { "idProduct": 3, "quantity": 1 }
     ],
-    coupon: "VALE0"
+    coupon: "VALE0",
+    from: { CEP: "88015600", latitude: -27.5906685, longitude: -48.5605664 },
+    to: { CEP: "22030060", latitude: -9.610394, longitude: -35.725652 }
   }
 
   const response = await axios.post("http://localhost:3000/checkout", order)
@@ -127,7 +139,9 @@ test("Should not create order with negative quantity item", async function () {
       { "idProduct": 2, "quantity": -5 },
       { "idProduct": 3, "quantity": 1 }
     ],
-    coupon: "VALE20"
+    coupon: "VALE20",
+    from: { CEP: "88015600", latitude: -27.5906685, longitude: -48.5605664 },
+    to: { CEP: "22030060", latitude: -9.610394, longitude: -35.725652 }
   }
 
   const response = await axios.post("http://localhost:3000/checkout", order)
@@ -147,7 +161,9 @@ test("Should not create order with duplicated items", async function () {
       { "idProduct": 2, "quantity": 5 },
       { "idProduct": 3, "quantity": 1 }
     ],
-    coupon: "VALE20"
+    coupon: "VALE20",
+    from: { CEP: "88015600", latitude: -27.5906685, longitude: -48.5605664 },
+    to: { CEP: "22030060", latitude: -9.610394, longitude: -35.725652 }
   }
 
   const response = await axios.post("http://localhost:3000/checkout", order)
@@ -164,7 +180,9 @@ test("Should not create order items that have negative measures", async function
     items: [
       { "idProduct": 4, "quantity": 2 },
     ],
-    coupon: "VALE20_2"
+    coupon: "VALE20_2",
+    from: { CEP: "88015600", latitude: -27.5906685, longitude: -48.5605664 },
+    to: { CEP: "22030060", latitude: -9.610394, longitude: -35.725652 }
   }
 
   const response = await axios.post("http://localhost:3000/checkout", order)
@@ -181,7 +199,9 @@ test("Should not create order items that have negative weight", async function (
     items: [
       { "idProduct": 4, "quantity": 2 },
     ],
-    coupon: "VALE20_2"
+    coupon: "VALE20_2",
+    from: { CEP: "88015600", latitude: -27.5906685, longitude: -48.5605664 },
+    to: { CEP: "22030060", latitude: -9.610394, longitude: -35.725652 }
   }
 
   const response = await axios.post("http://localhost:3000/checkout", order)
@@ -200,7 +220,9 @@ test('Should create an order with 3 items, associate discount coupon and calcula
       { "idProduct": 2, "quantity": 5 },
       { "idProduct": 3, "quantity": 1 }
     ],
-    coupon: "VALE20_2"
+    coupon: "VALE20_2",
+    from: { CEP: "88015600", latitude: -27.5906685, longitude: -48.5605664 },
+    to: { CEP: "22030060", latitude: -9.610394, longitude: -35.725652 }
   }
 
   const response = await axios.post("http://localhost:3000/checkout", order)
@@ -218,7 +240,9 @@ test("Should not create any order and alert that id is mandatory", async functio
       { "idProduct": 2, "quantity": 5 },
       { "idProduct": 3, "quantity": 1 }
     ],
-    coupon: "VALE20_2"
+    coupon: "VALE20_2",
+    from: { CEP: "88015600", latitude: -27.5906685, longitude: -48.5605664 },
+    to: { CEP: "22030060", latitude: -9.610394, longitude: -35.725652 }
   };
 
   const response = await axios.post("http://localhost:3000/checkout", order);
@@ -236,6 +260,8 @@ test("Should list all orders in database", async function () {
       { "idProduct": 2, "quantity": 5 },
       { "idProduct": 3, "quantity": 1 }
     ],
+    from: { CEP: "88015600", latitude: -27.5906685, longitude: -48.5605664 },
+    to: { CEP: "22030060", latitude: -9.610394, longitude: -35.725652 }
   }
 
   const order1 = {
@@ -246,6 +272,8 @@ test("Should list all orders in database", async function () {
       { "idProduct": 2, "quantity": 5 },
       { "idProduct": 3, "quantity": 2 }
     ],
+    from: { CEP: "88015600", latitude: -27.5906685, longitude: -48.5605664 },
+    to: { CEP: "22030060", latitude: -9.610394, longitude: -35.725652 }
   }
 
   const response1 = await axios.post("http://localhost:3000/checkout", order);
