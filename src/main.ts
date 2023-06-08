@@ -1,14 +1,15 @@
 import express, { Request, Response } from "express";
 import Checkout from "./Checkout";
 import ListOrders from "./ListOrders";
+import DatabaseRepositoryFactory from "./DatabaseRepositoryFactory";
 
 const app = express()
 
 app.use(express.json())
 
 app.post("/checkout", async function (request: Request, response: Response) {
-
-  const checkout = new Checkout();
+  const repositoryFactory = new DatabaseRepositoryFactory();
+  const checkout = new Checkout(repositoryFactory);
   try {
     const output = await checkout.execute(request.body);
     response.json(output);
@@ -20,9 +21,9 @@ app.post("/checkout", async function (request: Request, response: Response) {
 
 })
 
-app.get("/list", async function (request: Request, response: Response) {
-
-  const listOrders = new ListOrders();
+app.get("/orders", async function (request: Request, response: Response) {
+  const repositoryFactory = new DatabaseRepositoryFactory();
+  const listOrders = new ListOrders(repositoryFactory);
   try {
     const output = await listOrders.execute();
     response.json(output);

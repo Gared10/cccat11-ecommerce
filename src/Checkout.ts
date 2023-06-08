@@ -4,22 +4,23 @@ import Order from "./Order";
 import { validate } from "./validateCPF";
 import ProductRepository from "./ProductRepository";
 import CouponRepository from "./CouponRespository";
-import ProductRepositoryDatabase from "./ProductRepositoryDatabase";
-import CouponRepositoryDatabase from "./CouponRepositoryDatabase";
 import OrderRepository from "./OrderRepository";
-import OrderRepositoryDatabase from "./OrderRepositoryDatabase";
 import LocationRepository from "./LocationRepository";
-import LocationRepositoryDatabase from "./LocationRepositoryDatabase";
+import RepositoryFactory from "./RepositoryFactory";
 
 export default class Checkout {
+  orderRepository: OrderRepository;
+  productRepository: ProductRepository;
+  couponRepository: CouponRepository;
+  locationRepository: LocationRepository;
 
   constructor(
-    readonly productRepository: ProductRepository = new ProductRepositoryDatabase,
-    readonly couponRepository: CouponRepository = new CouponRepositoryDatabase,
-    readonly orderRepository: OrderRepository = new OrderRepositoryDatabase,
-    readonly locationRepository: LocationRepository = new LocationRepositoryDatabase
+    repositoryFactory: RepositoryFactory
   ) {
-
+    this.orderRepository = repositoryFactory.createOrderRepository();
+    this.productRepository = repositoryFactory.createProductRepository();
+    this.couponRepository = repositoryFactory.createCouponRepository();
+    this.locationRepository = repositoryFactory.createLocationRepository();
   }
 
   async execute(input: Input): Promise<Order> {

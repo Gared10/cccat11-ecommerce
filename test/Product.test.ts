@@ -7,7 +7,7 @@ test('Should create a product', function () {
 })
 
 test('Should not create a product and alert that there is a(some) invalid measure(s)', function () {
-  expect(() => new Product('Carteira', 25, 5, 2, -100, 5, 10)).rejects.toThrow(new Error('Invalid measures!'));
+  expect(() => new Product('Carteira', 25, 5, 2, -100, 5, 10)).toThrow(new Error('Invalid measures!'));
 })
 
 test('Should calculate volume', function () {

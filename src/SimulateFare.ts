@@ -1,15 +1,16 @@
 import Coord from "./Coord";
 import DistanceCalculator from "./DistanceCalculator";
 import ProductRepository from "./ProductRepository";
-import ProductRepositoryDatabase from "./ProductRepositoryDatabase";
+import RepositoryFactory from "./RepositoryFactory";
 import { calculateFare } from "./calculateFare";
 
 export default class SimulateFare {
+  productRepository: ProductRepository;
 
   constructor(
-    readonly productRepository: ProductRepository = new ProductRepositoryDatabase
+    repositoryFactor: RepositoryFactory
   ) {
-
+    this.productRepository = repositoryFactor.createProductRepository();
   }
 
   async execute(input: Input): Promise<Output> {

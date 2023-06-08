@@ -1,7 +1,9 @@
 export default class Product {
 
   constructor(readonly description: string, readonly price: number, readonly idProduct: number, readonly height: number, readonly weight: number, readonly width: number, readonly product_length: number) {
-    if (height <= 0 || width <= 0 || product_length <= 0 || weight <= 0) throw new Error('Invalid measures!');
+    if (height <= 0 || width <= 0 || product_length <= 0 || weight <= 0) {
+      throw new Error('Invalid measures!');
+    }
   }
 
   getDescription(): string {

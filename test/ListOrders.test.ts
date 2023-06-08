@@ -2,8 +2,8 @@ import axios from "axios";
 import ListOrders from "../src/ListOrders";
 import crypto from 'crypto';
 import Checkout from "../src/Checkout";
-import OrderRepository from "../src/OrderRepository";
-import OrderRepositoryDatabase from "../src/OrderRepositoryDatabase";
+import DatabaseRepositoryFactory from "../src/DatabaseRepositoryFactory";
+import RepositoryFactory from "../src/RepositoryFactory";
 
 axios.defaults.validateStatus = function () {
   return true;
@@ -11,16 +11,17 @@ axios.defaults.validateStatus = function () {
 
 let checkout: Checkout;
 let listOrders: ListOrders;
-let orderRepository: OrderRepository
+let repositoryFactory: RepositoryFactory;
 
 beforeEach(() => {
-  checkout = new Checkout();
-  orderRepository = new OrderRepositoryDatabase();
-  listOrders = new ListOrders();
+  repositoryFactory = new DatabaseRepositoryFactory();
+  checkout = new Checkout(repositoryFactory);
+  listOrders = new ListOrders(repositoryFactory);
 });
 
 
 test("Should list all orders in database", async function () {
+  const orderRepository = repositoryFactory.createOrderRepository();
   await orderRepository.clear();
   const uuid = crypto.randomUUID();
   const uuid1 = crypto.randomUUID();

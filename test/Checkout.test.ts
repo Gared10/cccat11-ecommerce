@@ -1,11 +1,11 @@
 import axios from "axios";
 import Checkout from "../src/Checkout";
-import ProductRepositoryDatabase from "../src/ProductRepositoryDatabase";
-import CouponRepositoryDatabase from "../src/CouponRepositoryDatabase";
 import OrderRepositoryDatabase from "../src/OrderRepositoryDatabase";
 import GetOrder from "../src/GetOrder";
 import crypto from 'crypto';
 import OrderRepository from "../src/OrderRepository";
+import DatabaseRepositoryFactory from "../src/DatabaseRepositoryFactory";
+import RepositoryFactory from "../src/RepositoryFactory";
 
 axios.defaults.validateStatus = function () {
   return true;
@@ -13,14 +13,12 @@ axios.defaults.validateStatus = function () {
 
 let checkout: Checkout;
 let getOrder: GetOrder;
-let orderRepository: OrderRepository
+let repositoryFactory: RepositoryFactory;
 
 beforeEach(() => {
-  const productRepository = new ProductRepositoryDatabase();
-  const couponRepository = new CouponRepositoryDatabase();
-  checkout = new Checkout(productRepository, couponRepository);
-  orderRepository = new OrderRepositoryDatabase();
-  getOrder = new GetOrder(orderRepository);
+  repositoryFactory = new DatabaseRepositoryFactory();
+  checkout = new Checkout(repositoryFactory);
+  getOrder = new GetOrder(repositoryFactory);
 });
 
 test('Should create an order with 3 items and calculate total amount', async function () {
@@ -229,6 +227,7 @@ test('Should create an order with 3 items, associate discount coupon and calcula
 })
 
 test('Should create and persist an order', async function () {
+  const orderRepository = repositoryFactory.createOrderRepository();
   await orderRepository.clear();
   const uuid = crypto.randomUUID();
   const order = {
