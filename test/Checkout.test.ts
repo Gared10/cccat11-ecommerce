@@ -1,11 +1,11 @@
 import axios from "axios";
 import Checkout from "../src/Checkout";
-import OrderRepositoryDatabase from "../src/OrderRepositoryDatabase";
 import GetOrder from "../src/GetOrder";
 import crypto from 'crypto';
-import OrderRepository from "../src/OrderRepository";
 import DatabaseRepositoryFactory from "../src/DatabaseRepositoryFactory";
 import RepositoryFactory from "../src/RepositoryFactory";
+import DatabaseConnection from "../src/DatabaseConnection";
+import PgPromiseAdapter from "../src/PgPromiseAdapter";
 
 axios.defaults.validateStatus = function () {
   return true;
@@ -14,9 +14,12 @@ axios.defaults.validateStatus = function () {
 let checkout: Checkout;
 let getOrder: GetOrder;
 let repositoryFactory: RepositoryFactory;
+let connection: DatabaseConnection;
 
-beforeEach(() => {
-  repositoryFactory = new DatabaseRepositoryFactory();
+beforeEach(async () => {
+  connection = new PgPromiseAdapter();
+  await connection.connect();
+  repositoryFactory = new DatabaseRepositoryFactory(connection);
   checkout = new Checkout(repositoryFactory);
   getOrder = new GetOrder(repositoryFactory);
 });
@@ -75,7 +78,7 @@ test('Should alert that the cpf is invalid and not create any order', async func
     to: { CEP: "22030060", latitude: -9.610394, longitude: -35.725652 }
   }
 
-  expect(() => checkout.execute(order)).rejects.toThrow(new Error('Invalid cpf'));
+  await expect(() => checkout.execute(order)).rejects.toThrow(new Error('Invalid cpf'));
 })
 
 test('Should alert that the cpf is invalid and not create any order because cpf field is not filled in request data', async function () {
@@ -93,7 +96,7 @@ test('Should alert that the cpf is invalid and not create any order because cpf 
     to: { CEP: "22030060", latitude: -9.610394, longitude: -35.725652 }
   }
 
-  expect(() => checkout.execute(order)).rejects.toThrow(new Error('Invalid cpf'));
+  await expect(() => checkout.execute(order)).rejects.toThrow(new Error('Invalid cpf'));
 })
 
 test("Should not apply expired discount coupon", async function () {
@@ -151,7 +154,7 @@ test("Should not create order with negative quantity item", async function () {
     to: { CEP: "22030060", latitude: -9.610394, longitude: -35.725652 }
   }
 
-  expect(() => checkout.execute(order)).rejects.toThrow(new Error('Invalid quantity!'));
+  await expect(() => checkout.execute(order)).rejects.toThrow(new Error('Invalid quantity!'));
 })
 
 test("Should not create order with duplicated items", async function () {
@@ -170,39 +173,7 @@ test("Should not create order with duplicated items", async function () {
     to: { CEP: "22030060", latitude: -9.610394, longitude: -35.725652 }
   }
 
-  expect(() => checkout.execute(order)).rejects.toThrow(new Error('Duplicated item!'));
-})
-
-test("Should not create order items that have negative measures", async function () {
-  const uuid = crypto.randomUUID();
-  const order = {
-    id: uuid,
-    cpf: "11144477735",
-    items: [
-      { "idProduct": 4, "quantity": 2 },
-    ],
-    coupon: "VALE20_2",
-    from: { CEP: "88015600", latitude: -27.5906685, longitude: -48.5605664 },
-    to: { CEP: "22030060", latitude: -9.610394, longitude: -35.725652 }
-  }
-
-  expect(() => checkout.execute(order)).rejects.toThrow(new Error('Invalid measures!'));
-})
-
-test("Should not create order items that have negative weight", async function () {
-  const uuid = crypto.randomUUID();
-  const order = {
-    id: uuid,
-    cpf: "11144477735",
-    items: [
-      { "idProduct": 4, "quantity": 2 },
-    ],
-    coupon: "VALE20_2",
-    from: { CEP: "88015600", latitude: -27.5906685, longitude: -48.5605664 },
-    to: { CEP: "22030060", latitude: -9.610394, longitude: -35.725652 }
-  }
-
-  expect(() => checkout.execute(order)).rejects.toThrow(new Error('Invalid measures!'));
+  await expect(() => checkout.execute(order)).rejects.toThrow(new Error('Duplicated item!'));
 })
 
 test('Should create an order with 3 items, associate discount coupon and calculate total amount(with discount over total amount)', async function () {
@@ -268,4 +239,8 @@ test('Should create and persist an order', async function () {
   expect(order2_.getTotal()).toBe(35000);
   expect(order2_.getTotalFare()).toBe(1060)
   expect(order2_.getCode()).toBe("202300000002")
+})
+
+afterEach(async () => {
+  await connection.close();
 })

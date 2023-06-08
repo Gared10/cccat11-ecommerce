@@ -4,6 +4,8 @@ import crypto from 'crypto';
 import Checkout from "../src/Checkout";
 import DatabaseRepositoryFactory from "../src/DatabaseRepositoryFactory";
 import RepositoryFactory from "../src/RepositoryFactory";
+import DatabaseConnection from "../src/DatabaseConnection";
+import PgPromiseAdapter from "../src/PgPromiseAdapter";
 
 axios.defaults.validateStatus = function () {
   return true;
@@ -12,9 +14,12 @@ axios.defaults.validateStatus = function () {
 let checkout: Checkout;
 let listOrders: ListOrders;
 let repositoryFactory: RepositoryFactory;
+let connection: DatabaseConnection;
 
-beforeEach(() => {
-  repositoryFactory = new DatabaseRepositoryFactory();
+beforeEach(async () => {
+  connection = new PgPromiseAdapter();
+  await connection.connect();
+  repositoryFactory = new DatabaseRepositoryFactory(connection);
   checkout = new Checkout(repositoryFactory);
   listOrders = new ListOrders(repositoryFactory);
 });
@@ -54,4 +59,8 @@ test("Should list all orders in database", async function () {
   const response = await listOrders.execute();
   expect(response.length).toBeGreaterThan(1);
 
+})
+
+afterEach(async () => {
+  await connection.close();
 })
