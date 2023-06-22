@@ -19,3 +19,13 @@ test('Should calculate fare', async function () {
 
   expect(response.data.fare).toBe(1060);
 })
+
+test('Should get a location', async function () {
+  const cep = "88015600"
+
+  const response = await axios.get(`http://localhost:3002/locations/${cep}`)
+
+  expect(response.data.CEP).toBe("88015600")
+  expect(response.data.latitude).toBe(-27.5906685)
+  expect(response.data.longitude).toBe(-48.5605664)
+})

@@ -1,4 +1,5 @@
 import CatalogGateway from "../../application/gateway/CatalogGateway";
+import Coord from "../../domain/entity/Coord";
 import Product from "../../domain/entity/Product";
 import HttpClient from "../http/HttpClient";
 
