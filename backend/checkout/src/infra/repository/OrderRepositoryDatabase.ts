@@ -1,12 +1,8 @@
 import Order from "../../domain/entity/Order";
-import pgp from "pg-promise";
-import OrderRepository from "../../application/usecase/interface/OrderRepository";
-import ProductRepositoryDatabase from "./ProductRepositoryDatabase";
-import ProductRepository from "../../application/usecase/interface/ProductRepository";
-import LocationRepository from "../../application/usecase/interface/LocationRepository";
-import LocationRepositoryDatabase from "./LocationRepositoryDatabase";
 import DatabaseConnection from "../database/DatabaseConnection";
-import RepositoryFactory from "../../application/usecase/interface/RepositoryFactory";
+import OrderRepository from "../../application/repository/OrderRepository";
+import ProductRepository from "../../application/repository/ProductRepository";
+import LocationRepository from "../../application/repository/LocationRepository";
 
 export default class OrderRepositoryDatabase implements OrderRepository {
 

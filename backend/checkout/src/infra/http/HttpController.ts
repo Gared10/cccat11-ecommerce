@@ -1,7 +1,7 @@
 import Checkout from "../../application/usecase/Checkout";
 import HttpServer from "./HttpServer";
 import ListOrders from "../../application/usecase/ListOrders";
-import UseCaseFactory from "../../application/usecase/interface/UseCaseFactory";
+import UseCaseFactory from "../../application/factory/UseCaseFactory";
 
 export default class HttpController {
   checkout: Checkout;

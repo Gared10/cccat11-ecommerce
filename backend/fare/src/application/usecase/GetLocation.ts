@@ -1,3 +1,4 @@
+import Location from "../../domain/entity/Location";
 import RepositoryFactory from "../factory/RepositoryFactory"
 import LocationRepository from "../repository/LocationRepository";
 
@@ -8,7 +9,7 @@ export default class GetLocation {
     this.locationRepository = repositoryFactory.createLocationRepository();
   }
 
-  async execute(input: Input) {
+  async execute(input: Input): Promise<Location> {
     const location = await this.locationRepository.get(input.cep);
     return location;
   }

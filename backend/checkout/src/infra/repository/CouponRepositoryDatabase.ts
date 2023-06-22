@@ -1,5 +1,4 @@
-import pgp from "pg-promise";
-import CouponRepository from "../../application/usecase/interface/CouponRespository";
+import CouponRepository from "../../application/repository/CouponRespository";
 import Coupon from "../../domain/entity/Coupon";
 import DatabaseConnection from "../database/DatabaseConnection";
 

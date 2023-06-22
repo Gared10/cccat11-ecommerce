@@ -1,7 +1,6 @@
 import Order from "../../domain/entity/Order";
-import OrderRepository from "./interface/OrderRepository";
-import OrderRepositoryDatabase from "../../infra/repository/OrderRepositoryDatabase";
-import RepositoryFactory from "./interface/RepositoryFactory";
+import RepositoryFactory from "../factory/RepositoryFactory";
+import OrderRepository from "../repository/OrderRepository";
 
 export default class ListOrders {
   orderRepository: OrderRepository

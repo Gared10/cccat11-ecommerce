@@ -1,13 +1,13 @@
 import CouponRepositoryDatabase from "../repository/CouponRepositoryDatabase";
-import CouponRepository from "../../application/usecase/interface/CouponRespository";
 import DatabaseConnection from "../database/DatabaseConnection";
-import LocationRepository from "../../application/usecase/interface/LocationRepository";
 import LocationRepositoryDatabase from "../repository/LocationRepositoryDatabase";
-import OrderRepository from "../../application/usecase/interface/OrderRepository";
 import OrderRepositoryDatabase from "../repository/OrderRepositoryDatabase";
-import ProductRepository from "../../application/usecase/interface/ProductRepository";
 import ProductRepositoryDatabase from "../repository/ProductRepositoryDatabase";
-import RepositoryFactory from "../../application/usecase/interface/RepositoryFactory";
+import RepositoryFactory from "../../application/factory/RepositoryFactory";
+import OrderRepository from "../../application/repository/OrderRepository";
+import ProductRepository from "../../application/repository/ProductRepository";
+import CouponRepository from "../../application/repository/CouponRespository";
+import LocationRepository from "../../application/repository/LocationRepository";
 
 export default class DatabaseRepositoryFactory implements RepositoryFactory {
   constructor(readonly connection: DatabaseConnection) {

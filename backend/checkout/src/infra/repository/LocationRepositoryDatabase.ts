@@ -1,7 +1,6 @@
 import DatabaseConnection from "../database/DatabaseConnection";
 import Location from "../../domain/entity/Location";
-import LocationRepository from "../../application/usecase/interface/LocationRepository";
-import pgp from "pg-promise";
+import LocationRepository from "../../application/repository/LocationRepository";
 
 export default class LocationRepositoryDatabase implements LocationRepository {
 

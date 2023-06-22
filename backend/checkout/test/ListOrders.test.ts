@@ -3,9 +3,12 @@ import ListOrders from "../src/application/usecase/ListOrders";
 import crypto from 'crypto';
 import Checkout from "../src/application/usecase/Checkout";
 import DatabaseRepositoryFactory from "../src/infra/factory/DatabaseRepositoryFactory";
-import RepositoryFactory from "../src/application/usecase/interface/RepositoryFactory";
+import RepositoryFactory from "../src/application/factory/RepositoryFactory";
 import DatabaseConnection from "../src/infra/database/DatabaseConnection";
 import PgPromiseAdapter from "../src/infra/database/PgPromiseAdapter";
+import GatewayFactory from "../src/application/factory/GatewayFactory";
+import AxiosHttpClient from "../src/infra/http/AxiosHttpClient";
+import GatewayHttpFactory from "../src/infra/factory/GatewayHttpGateway";
 
 axios.defaults.validateStatus = function () {
   return true;
@@ -15,12 +18,16 @@ let checkout: Checkout;
 let listOrders: ListOrders;
 let repositoryFactory: RepositoryFactory;
 let connection: DatabaseConnection;
+let gatewayFactory: GatewayFactory;
+let httpClient: AxiosHttpClient;
 
 beforeEach(async () => {
   connection = new PgPromiseAdapter();
   await connection.connect();
   repositoryFactory = new DatabaseRepositoryFactory(connection);
-  checkout = new Checkout(repositoryFactory);
+  httpClient = new AxiosHttpClient();
+  gatewayFactory = new GatewayHttpFactory(httpClient);
+  checkout = new Checkout(repositoryFactory, gatewayFactory);
   listOrders = new ListOrders(repositoryFactory);
 });
 

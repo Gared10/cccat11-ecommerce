@@ -172,44 +172,6 @@ test("Should not create order with duplicated items", async function () {
   expect(response.data.message).toBe('Duplicated item!')
 })
 
-test("Should not create order items that have negative measures", async function () {
-  const uuid = crypto.randomUUID();
-  const order = {
-    id: uuid,
-    cpf: "11144477735",
-    items: [
-      { "idProduct": 4, "quantity": 2 },
-    ],
-    coupon: "VALE20_2",
-    from: { CEP: "88015600", latitude: -27.5906685, longitude: -48.5605664 },
-    to: { CEP: "22030060", latitude: -9.610394, longitude: -35.725652 }
-  }
-
-  const response = await axios.post("http://localhost:3000/checkout", order)
-
-  expect(response.status).toBe(422)
-  expect(response.data.message).toBe('Invalid measures!')
-})
-
-test("Should not create order items that have negative weight", async function () {
-  const uuid = crypto.randomUUID();
-  const order = {
-    id: uuid,
-    cpf: "11144477735",
-    items: [
-      { "idProduct": 4, "quantity": 2 },
-    ],
-    coupon: "VALE20_2",
-    from: { CEP: "88015600", latitude: -27.5906685, longitude: -48.5605664 },
-    to: { CEP: "22030060", latitude: -9.610394, longitude: -35.725652 }
-  }
-
-  const response = await axios.post("http://localhost:3000/checkout", order)
-
-  expect(response.status).toBe(422)
-  expect(response.data.message).toBe('Invalid measures!')
-})
-
 test('Should create an order with 3 items, associate discount coupon and calculate total amount(with discount over total amount)', async function () {
   const uuid = crypto.randomUUID();
   const order = {

@@ -2,25 +2,33 @@
 
 import Order from "../../domain/entity/Order";
 import { validate } from "../../domain/entity/validateCPF";
-import ProductRepository from "./interface/ProductRepository";
-import CouponRepository from "./interface/CouponRespository";
-import OrderRepository from "./interface/OrderRepository";
-import LocationRepository from "./interface/LocationRepository";
-import RepositoryFactory from "./interface/RepositoryFactory";
+import GatewayFactory from "../factory/GatewayFactory";
+import RepositoryFactory from "../factory/RepositoryFactory";
+import CatalogGateway from "../gateway/CatalogGateway";
+import FareGateway from "../gateway/FareGateway";
+import CouponRepository from "../repository/CouponRespository";
+import LocationRepository from "../repository/LocationRepository";
+import OrderRepository from "../repository/OrderRepository";
+import ProductRepository from "../repository/ProductRepository";
 
 export default class Checkout {
   orderRepository: OrderRepository;
   productRepository: ProductRepository;
   couponRepository: CouponRepository;
   locationRepository: LocationRepository;
+  catalogGateway: CatalogGateway;
+  fareGateway: FareGateway;
 
   constructor(
-    repositoryFactory: RepositoryFactory
+    repositoryFactory: RepositoryFactory,
+    gatewayFactory: GatewayFactory
   ) {
     this.orderRepository = repositoryFactory.createOrderRepository();
     this.productRepository = repositoryFactory.createProductRepository();
     this.couponRepository = repositoryFactory.createCouponRepository();
     this.locationRepository = repositoryFactory.createLocationRepository();
+    this.catalogGateway = gatewayFactory.createCatalogGateway();
+    this.fareGateway = gatewayFactory.createFareGateway()
   }
 
   async execute(input: Input): Promise<Order> {
@@ -28,11 +36,11 @@ export default class Checkout {
     if (!validate(input.cpf)) throw new Error('Invalid cpf');
     let sequence = await this.orderRepository.count()
     sequence++;
-    const fromCEP = await this.locationRepository.get(input.from.CEP)
-    const toCEP = await this.locationRepository.get(input.to.CEP)
+    const fromCEP = await this.fareGateway.getLocation(input.from.CEP)
+    const toCEP = await this.fareGateway.getLocation(input.to.CEP)
     order = new Order(input.cpf, input.id, fromCEP, toCEP, undefined, sequence)
     for (const item of input.items) {
-      const product = await this.productRepository.get(item.idProduct);
+      const product = await this.catalogGateway.getProduct(item.idProduct);
       order.addOrderItem(item.quantity, product);
     }
     if (input.coupon) {

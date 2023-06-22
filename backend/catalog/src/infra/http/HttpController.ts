@@ -11,9 +11,7 @@ export default class HttpController {
     this.getProduct = useCaseFactory.createGetProduct();
     this.listProducts = useCaseFactory.createListProducts();
     httpServer.on("get", "/products/:idProduct", async (body: any, params: any, headers: any) => {
-      console.log(params.idProduct);
       const output = await this.getProduct.execute(params.idProduct);
-      console.log(output)
       return output;
     })
     httpServer.on("get", "/products", async (body: any, params: any, headers: any) => {
