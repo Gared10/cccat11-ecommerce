@@ -1,5 +1,4 @@
 import RepositoryFactory from "./interface/RepositoryFactory";
-import { pbkdf2Sync, randomBytes } from 'crypto';
 import UserRepository from "./interface/UserRepository";
 import User from "../../domain/entity/User";
 
@@ -11,21 +10,11 @@ export default class SignUp {
   }
 
   async execute(input: Input): Promise<void> {
-    if (this.isValid(input.email)) {
-      const salt = randomBytes(20).toString("hex");
-      const password = pbkdf2Sync(input.password, salt, 64, 100, "sha512").toString("hex");
-      const user = new User(input.email, password, salt);
-      await this.userRepository.save(user);
-    }
+    const user = User.create(input.email, input.password);
+    await this.userRepository.save(user);
   }
 
-  isValid(email: string) {
-    return String(email)
-      .toLowerCase()
-      .match(
-        /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/
-      );
-  }
+
 }
 
 type Input = {
