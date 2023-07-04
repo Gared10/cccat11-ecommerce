@@ -1,7 +1,6 @@
 import RepositoryFactory from "./interface/RepositoryFactory";
-import { pbkdf2Sync, randomBytes } from 'crypto';
 import UserRepository from "./interface/UserRepository";
-import { sign } from 'jsonwebtoken';
+import TokenGenerator from "../../domain/entity/TokenGenerator";
 
 export default class Login {
   userRepository: UserRepository;
@@ -12,12 +11,10 @@ export default class Login {
 
   async execute(input: Input): Promise<Output> {
     const user = await this.userRepository.get(input.email);
-    const password = pbkdf2Sync(input.password, user.salt, 64, 100, "sha512").toString("hex");
-    if (user.password === password) {
-      const expiresIn = 1000000;
-      const token = sign({ email: user.email, iat: input.date.getTime(), expiresIn }, "secret")
+    if (user.validatePassword(input.password)) {
+      const tokenGenerator = new TokenGenerator("secret");
       return {
-        token
+        token: tokenGenerator.sign(user, input.date)
       };
     } else {
       throw new Error("Authentication failed");
