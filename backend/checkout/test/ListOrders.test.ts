@@ -8,7 +8,7 @@ import DatabaseConnection from "../src/infra/database/DatabaseConnection";
 import PgPromiseAdapter from "../src/infra/database/PgPromiseAdapter";
 import GatewayFactory from "../src/application/factory/GatewayFactory";
 import AxiosHttpClient from "../src/infra/http/AxiosHttpClient";
-import GatewayHttpFactory from "../src/infra/factory/GatewayHttpGateway";
+import GatewayHttpFactory from "../src/infra/factory/GatewayHttpFactory";
 
 axios.defaults.validateStatus = function () {
   return true;
@@ -46,7 +46,8 @@ test("Should list all orders in database", async function () {
       { "idProduct": 3, "quantity": 1 }
     ],
     from: { CEP: "88015600", latitude: -27.5906685, longitude: -48.5605664 },
-    to: { CEP: "22030060", latitude: -9.610394, longitude: -35.725652 }
+    to: { CEP: "22030060", latitude: -9.610394, longitude: -35.725652 },
+    token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImpvYW9AZ21haWwuY29tIiwiaWF0IjoxNjc3Njc1NjAwMDAwLCJleHBpcmVzSW4iOjEwMDAwMDB9.UkLW3l3gaIW7U0JGpZnDUZTbE_fHtDLd-eI9yV0_C8s"
   }
 
   const order1 = {
@@ -58,7 +59,8 @@ test("Should list all orders in database", async function () {
       { "idProduct": 3, "quantity": 2 }
     ],
     from: { CEP: "88015600", latitude: -27.5906685, longitude: -48.5605664 },
-    to: { CEP: "22030060", latitude: -9.610394, longitude: -35.725652 }
+    to: { CEP: "22030060", latitude: -9.610394, longitude: -35.725652 },
+    token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImpvYW9AZ21haWwuY29tIiwiaWF0IjoxNjc3Njc1NjAwMDAwLCJleHBpcmVzSW4iOjEwMDAwMDB9.UkLW3l3gaIW7U0JGpZnDUZTbE_fHtDLd-eI9yV0_C8s"
   }
 
   await checkout.execute(order);

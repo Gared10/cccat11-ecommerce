@@ -16,7 +16,8 @@ test('Should create an order with 3 items and calculate total amount', async fun
       { "idProduct": 3, "quantity": 1 }
     ],
     from: { CEP: "88015600", latitude: -27.5906685, longitude: -48.5605664 },
-    to: { CEP: "22030060", latitude: -9.610394, longitude: -35.725652 }
+    to: { CEP: "22030060", latitude: -9.610394, longitude: -35.725652 },
+    token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImpvYW9AZ21haWwuY29tIiwiaWF0IjoxNjc3Njc1NjAwMDAwLCJleHBpcmVzSW4iOjEwMDAwMDB9.UkLW3l3gaIW7U0JGpZnDUZTbE_fHtDLd-eI9yV0_C8s"
   }
 
   const response = await axios.post("http://localhost:3000/checkout", order)
@@ -37,7 +38,8 @@ test('Should create an order with 3 items, associate discount coupon and calcula
     ],
     coupon: "VALE20_2",
     from: { CEP: "88015600", latitude: -27.5906685, longitude: -48.5605664 },
-    to: { CEP: "22030060", latitude: -9.610394, longitude: -35.725652 }
+    to: { CEP: "22030060", latitude: -9.610394, longitude: -35.725652 },
+    token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImpvYW9AZ21haWwuY29tIiwiaWF0IjoxNjc3Njc1NjAwMDAwLCJleHBpcmVzSW4iOjEwMDAwMDB9.UkLW3l3gaIW7U0JGpZnDUZTbE_fHtDLd-eI9yV0_C8s"
   }
 
   const response = await axios.post("http://localhost:3000/checkout", order)
@@ -58,7 +60,8 @@ test('Should alert that the cpf is invalid and not create any order', async func
     ],
     coupon: "VALE20_2",
     from: { CEP: "88015600", latitude: -27.5906685, longitude: -48.5605664 },
-    to: { CEP: "22030060", latitude: -9.610394, longitude: -35.725652 }
+    to: { CEP: "22030060", latitude: -9.610394, longitude: -35.725652 },
+    token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImpvYW9AZ21haWwuY29tIiwiaWF0IjoxNjc3Njc1NjAwMDAwLCJleHBpcmVzSW4iOjEwMDAwMDB9.UkLW3l3gaIW7U0JGpZnDUZTbE_fHtDLd-eI9yV0_C8s"
   }
 
   const response = await axios.post("http://localhost:3000/checkout", order)
@@ -78,7 +81,8 @@ test('Should alert that the cpf is invalid and not create any order because cpf 
     ],
     coupon: "VALE20_2",
     from: { CEP: "88015600", latitude: -27.5906685, longitude: -48.5605664 },
-    to: { CEP: "22030060", latitude: -9.610394, longitude: -35.725652 }
+    to: { CEP: "22030060", latitude: -9.610394, longitude: -35.725652 },
+    token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImpvYW9AZ21haWwuY29tIiwiaWF0IjoxNjc3Njc1NjAwMDAwLCJleHBpcmVzSW4iOjEwMDAwMDB9.UkLW3l3gaIW7U0JGpZnDUZTbE_fHtDLd-eI9yV0_C8s"
   }
 
   const response = await axios.post("http://localhost:3000/checkout", order)
@@ -99,7 +103,8 @@ test("Should not apply expired discount coupon", async function () {
     ],
     coupon: "VALE20",
     from: { CEP: "88015600", latitude: -27.5906685, longitude: -48.5605664 },
-    to: { CEP: "22030060", latitude: -9.610394, longitude: -35.725652 }
+    to: { CEP: "22030060", latitude: -9.610394, longitude: -35.725652 },
+    token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImpvYW9AZ21haWwuY29tIiwiaWF0IjoxNjc3Njc1NjAwMDAwLCJleHBpcmVzSW4iOjEwMDAwMDB9.UkLW3l3gaIW7U0JGpZnDUZTbE_fHtDLd-eI9yV0_C8s"
   }
 
   const response = await axios.post("http://localhost:3000/checkout", order)
@@ -120,7 +125,8 @@ test("Should not apply inexistence discount coupon", async function () {
     ],
     coupon: "VALE0",
     from: { CEP: "88015600", latitude: -27.5906685, longitude: -48.5605664 },
-    to: { CEP: "22030060", latitude: -9.610394, longitude: -35.725652 }
+    to: { CEP: "22030060", latitude: -9.610394, longitude: -35.725652 },
+    token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImpvYW9AZ21haWwuY29tIiwiaWF0IjoxNjc3Njc1NjAwMDAwLCJleHBpcmVzSW4iOjEwMDAwMDB9.UkLW3l3gaIW7U0JGpZnDUZTbE_fHtDLd-eI9yV0_C8s"
   }
 
   const response = await axios.post("http://localhost:3000/checkout", order)
@@ -141,7 +147,8 @@ test("Should not create order with negative quantity item", async function () {
     ],
     coupon: "VALE20",
     from: { CEP: "88015600", latitude: -27.5906685, longitude: -48.5605664 },
-    to: { CEP: "22030060", latitude: -9.610394, longitude: -35.725652 }
+    to: { CEP: "22030060", latitude: -9.610394, longitude: -35.725652 },
+    token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImpvYW9AZ21haWwuY29tIiwiaWF0IjoxNjc3Njc1NjAwMDAwLCJleHBpcmVzSW4iOjEwMDAwMDB9.UkLW3l3gaIW7U0JGpZnDUZTbE_fHtDLd-eI9yV0_C8s"
   }
 
   const response = await axios.post("http://localhost:3000/checkout", order)
@@ -163,7 +170,8 @@ test("Should not create order with duplicated items", async function () {
     ],
     coupon: "VALE20",
     from: { CEP: "88015600", latitude: -27.5906685, longitude: -48.5605664 },
-    to: { CEP: "22030060", latitude: -9.610394, longitude: -35.725652 }
+    to: { CEP: "22030060", latitude: -9.610394, longitude: -35.725652 },
+    token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImpvYW9AZ21haWwuY29tIiwiaWF0IjoxNjc3Njc1NjAwMDAwLCJleHBpcmVzSW4iOjEwMDAwMDB9.UkLW3l3gaIW7U0JGpZnDUZTbE_fHtDLd-eI9yV0_C8s"
   }
 
   const response = await axios.post("http://localhost:3000/checkout", order)
@@ -184,7 +192,8 @@ test('Should create an order with 3 items, associate discount coupon and calcula
     ],
     coupon: "VALE20_2",
     from: { CEP: "88015600", latitude: -27.5906685, longitude: -48.5605664 },
-    to: { CEP: "22030060", latitude: -9.610394, longitude: -35.725652 }
+    to: { CEP: "22030060", latitude: -9.610394, longitude: -35.725652 },
+    token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImpvYW9AZ21haWwuY29tIiwiaWF0IjoxNjc3Njc1NjAwMDAwLCJleHBpcmVzSW4iOjEwMDAwMDB9.UkLW3l3gaIW7U0JGpZnDUZTbE_fHtDLd-eI9yV0_C8s"
   }
 
   const response = await axios.post("http://localhost:3000/checkout", order)
@@ -204,7 +213,8 @@ test("Should not create any order and alert that id is mandatory", async functio
     ],
     coupon: "VALE20_2",
     from: { CEP: "88015600", latitude: -27.5906685, longitude: -48.5605664 },
-    to: { CEP: "22030060", latitude: -9.610394, longitude: -35.725652 }
+    to: { CEP: "22030060", latitude: -9.610394, longitude: -35.725652 },
+    token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImpvYW9AZ21haWwuY29tIiwiaWF0IjoxNjc3Njc1NjAwMDAwLCJleHBpcmVzSW4iOjEwMDAwMDB9.UkLW3l3gaIW7U0JGpZnDUZTbE_fHtDLd-eI9yV0_C8s"
   };
 
   const response = await axios.post("http://localhost:3000/checkout", order);
@@ -223,7 +233,8 @@ test("Should list all orders in database", async function () {
       { "idProduct": 3, "quantity": 1 }
     ],
     from: { CEP: "88015600", latitude: -27.5906685, longitude: -48.5605664 },
-    to: { CEP: "22030060", latitude: -9.610394, longitude: -35.725652 }
+    to: { CEP: "22030060", latitude: -9.610394, longitude: -35.725652 },
+    token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImpvYW9AZ21haWwuY29tIiwiaWF0IjoxNjc3Njc1NjAwMDAwLCJleHBpcmVzSW4iOjEwMDAwMDB9.UkLW3l3gaIW7U0JGpZnDUZTbE_fHtDLd-eI9yV0_C8s"
   }
 
   const order1 = {
@@ -235,7 +246,8 @@ test("Should list all orders in database", async function () {
       { "idProduct": 3, "quantity": 2 }
     ],
     from: { CEP: "88015600", latitude: -27.5906685, longitude: -48.5605664 },
-    to: { CEP: "22030060", latitude: -9.610394, longitude: -35.725652 }
+    to: { CEP: "22030060", latitude: -9.610394, longitude: -35.725652 },
+    token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImpvYW9AZ21haWwuY29tIiwiaWF0IjoxNjc3Njc1NjAwMDAwLCJleHBpcmVzSW4iOjEwMDAwMDB9.UkLW3l3gaIW7U0JGpZnDUZTbE_fHtDLd-eI9yV0_C8s"
   }
 
   const response1 = await axios.post("http://localhost:3000/checkout", order);
@@ -244,4 +256,26 @@ test("Should list all orders in database", async function () {
 
   expect(response.data.length).toBeGreaterThan(1);
 
+})
+
+test('Should create an order with 3 items and validate auth', async function () {
+  const uuid = crypto.randomUUID();
+  const order = {
+    id: uuid,
+    cpf: "11144477735",
+    items: [
+      { "idProduct": 1, "quantity": 2 },
+      { "idProduct": 2, "quantity": 5 },
+      { "idProduct": 3, "quantity": 1 }
+    ],
+    coupon: "VALE20_2",
+    from: { CEP: "88015600", latitude: -27.5906685, longitude: -48.5605664 },
+    to: { CEP: "22030060", latitude: -9.610394, longitude: -35.725652 },
+    token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImpvYW9AZ21haWwuY29tIiwiaWF0IjoxNjc3Njc1NjAwMDAwLCJleHBpcmVzSW4iOjEwMDAwMDB9.UkLW3l3gaIW7U0JGpZnDUZTbE_fHtDLd-eI9yV0_C8s"
+  }
+
+  const response = await axios.post("http://localhost:3000/checkout", order)
+
+  expect(response.data.items.length).toBe(3);
+  expect(response.data.total).toBe(28000);
 })

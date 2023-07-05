@@ -7,7 +7,7 @@ import RepositoryFactory from "../src/application/factory/RepositoryFactory";
 import DatabaseConnection from "../src/infra/database/DatabaseConnection";
 import PgPromiseAdapter from "../src/infra/database/PgPromiseAdapter";
 import GatewayFactory from "../src/application/factory/GatewayFactory";
-import GatewayHttpFactory from "../src/infra/factory/GatewayHttpGateway";
+import GatewayHttpFactory from "../src/infra/factory/GatewayHttpFactory";
 import AxiosHttpClient from "../src/infra/http/AxiosHttpClient";
 
 axios.defaults.validateStatus = function () {
@@ -28,7 +28,7 @@ beforeEach(async () => {
   httpClient = new AxiosHttpClient();
   gatewayFactory = new GatewayHttpFactory(httpClient)
   checkout = new Checkout(repositoryFactory, gatewayFactory);
-  getOrder = new GetOrder(repositoryFactory);
+  getOrder = new GetOrder(repositoryFactory, gatewayFactory);
 });
 
 test('Should create an order with 3 items and calculate total amount', async function () {
@@ -42,12 +42,13 @@ test('Should create an order with 3 items and calculate total amount', async fun
       { "idProduct": 3, "quantity": 1 }
     ],
     from: { CEP: "88015600", latitude: -27.5906685, longitude: -48.5605664 },
-    to: { CEP: "22030060", latitude: -9.610394, longitude: -35.725652 }
+    to: { CEP: "22030060", latitude: -9.610394, longitude: -35.725652 },
+    token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImpvYW9AZ21haWwuY29tIiwiaWF0IjoxNjc3Njc1NjAwMDAwLCJleHBpcmVzSW4iOjEwMDAwMDB9.UkLW3l3gaIW7U0JGpZnDUZTbE_fHtDLd-eI9yV0_C8s"
   }
 
   const response = await checkout.execute(order);
-  expect(response.getItems().length).toBe(3);
-  expect(response.getTotal()).toBe(35000);
+  expect(response.items.length).toBe(3);
+  expect(response.total).toBe(35000);
 })
 
 test('Should create an order with 3 items, associate discount coupon and calculate total amount(with discount over total amount)', async function () {
@@ -62,12 +63,13 @@ test('Should create an order with 3 items, associate discount coupon and calcula
     ],
     coupon: "VALE20_2",
     from: { CEP: "88015600", latitude: -27.5906685, longitude: -48.5605664 },
-    to: { CEP: "22030060", latitude: -9.610394, longitude: -35.725652 }
+    to: { CEP: "22030060", latitude: -9.610394, longitude: -35.725652 },
+    token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImpvYW9AZ21haWwuY29tIiwiaWF0IjoxNjc3Njc1NjAwMDAwLCJleHBpcmVzSW4iOjEwMDAwMDB9.UkLW3l3gaIW7U0JGpZnDUZTbE_fHtDLd-eI9yV0_C8s"
   }
 
   const response = await checkout.execute(order);
-  expect(response.getItems().length).toBe(3);
-  expect(response.getTotal()).toBe(28000);
+  expect(response.items.length).toBe(3);
+  expect(response.total).toBe(28000);
 })
 
 test('Should alert that the cpf is invalid and not create any order', async function () {
@@ -82,7 +84,8 @@ test('Should alert that the cpf is invalid and not create any order', async func
     ],
     coupon: "VALE20_2",
     from: { CEP: "88015600", latitude: -27.5906685, longitude: -48.5605664 },
-    to: { CEP: "22030060", latitude: -9.610394, longitude: -35.725652 }
+    to: { CEP: "22030060", latitude: -9.610394, longitude: -35.725652 },
+    token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImpvYW9AZ21haWwuY29tIiwiaWF0IjoxNjc3Njc1NjAwMDAwLCJleHBpcmVzSW4iOjEwMDAwMDB9.UkLW3l3gaIW7U0JGpZnDUZTbE_fHtDLd-eI9yV0_C8s"
   }
 
   await expect(() => checkout.execute(order)).rejects.toThrow(new Error('Invalid cpf'));
@@ -100,7 +103,8 @@ test('Should alert that the cpf is invalid and not create any order because cpf 
     ],
     coupon: "VALE20_2",
     from: { CEP: "88015600", latitude: -27.5906685, longitude: -48.5605664 },
-    to: { CEP: "22030060", latitude: -9.610394, longitude: -35.725652 }
+    to: { CEP: "22030060", latitude: -9.610394, longitude: -35.725652 },
+    token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImpvYW9AZ21haWwuY29tIiwiaWF0IjoxNjc3Njc1NjAwMDAwLCJleHBpcmVzSW4iOjEwMDAwMDB9.UkLW3l3gaIW7U0JGpZnDUZTbE_fHtDLd-eI9yV0_C8s"
   }
 
   await expect(() => checkout.execute(order)).rejects.toThrow(new Error('Invalid cpf'));
@@ -118,12 +122,13 @@ test("Should not apply expired discount coupon", async function () {
     ],
     coupon: "VALE20",
     from: { CEP: "88015600", latitude: -27.5906685, longitude: -48.5605664 },
-    to: { CEP: "22030060", latitude: -9.610394, longitude: -35.725652 }
+    to: { CEP: "22030060", latitude: -9.610394, longitude: -35.725652 },
+    token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImpvYW9AZ21haWwuY29tIiwiaWF0IjoxNjc3Njc1NjAwMDAwLCJleHBpcmVzSW4iOjEwMDAwMDB9.UkLW3l3gaIW7U0JGpZnDUZTbE_fHtDLd-eI9yV0_C8s"
   }
 
   const response = await checkout.execute(order);
-  expect(response.getItems().length).toBe(3);
-  expect(response.getTotal()).toBe(35000);
+  expect(response.items.length).toBe(3);
+  expect(response.total).toBe(35000);
 })
 
 test("Should not apply inexistence discount coupon", async function () {
@@ -138,12 +143,13 @@ test("Should not apply inexistence discount coupon", async function () {
     ],
     coupon: "VALE0",
     from: { CEP: "88015600", latitude: -27.5906685, longitude: -48.5605664 },
-    to: { CEP: "22030060", latitude: -9.610394, longitude: -35.725652 }
+    to: { CEP: "22030060", latitude: -9.610394, longitude: -35.725652 },
+    token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImpvYW9AZ21haWwuY29tIiwiaWF0IjoxNjc3Njc1NjAwMDAwLCJleHBpcmVzSW4iOjEwMDAwMDB9.UkLW3l3gaIW7U0JGpZnDUZTbE_fHtDLd-eI9yV0_C8s"
   }
 
   const response = await checkout.execute(order);
-  expect(response.getItems().length).toBe(3);
-  expect(response.getTotal()).toBe(35000);
+  expect(response.items.length).toBe(3);
+  expect(response.total).toBe(35000);
 })
 
 test("Should not create order with negative quantity item", async function () {
@@ -158,7 +164,8 @@ test("Should not create order with negative quantity item", async function () {
     ],
     coupon: "VALE20",
     from: { CEP: "88015600", latitude: -27.5906685, longitude: -48.5605664 },
-    to: { CEP: "22030060", latitude: -9.610394, longitude: -35.725652 }
+    to: { CEP: "22030060", latitude: -9.610394, longitude: -35.725652 },
+    token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImpvYW9AZ21haWwuY29tIiwiaWF0IjoxNjc3Njc1NjAwMDAwLCJleHBpcmVzSW4iOjEwMDAwMDB9.UkLW3l3gaIW7U0JGpZnDUZTbE_fHtDLd-eI9yV0_C8s"
   }
 
   await expect(() => checkout.execute(order)).rejects.toThrow(new Error('Invalid quantity!'));
@@ -177,7 +184,8 @@ test("Should not create order with duplicated items", async function () {
     ],
     coupon: "VALE20",
     from: { CEP: "88015600", latitude: -27.5906685, longitude: -48.5605664 },
-    to: { CEP: "22030060", latitude: -9.610394, longitude: -35.725652 }
+    to: { CEP: "22030060", latitude: -9.610394, longitude: -35.725652 },
+    token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImpvYW9AZ21haWwuY29tIiwiaWF0IjoxNjc3Njc1NjAwMDAwLCJleHBpcmVzSW4iOjEwMDAwMDB9.UkLW3l3gaIW7U0JGpZnDUZTbE_fHtDLd-eI9yV0_C8s"
   }
 
   await expect(() => checkout.execute(order)).rejects.toThrow(new Error('Duplicated item!'));
@@ -195,13 +203,14 @@ test('Should create an order with 3 items, associate discount coupon and calcula
     ],
     coupon: "VALE20_2",
     from: { CEP: "88015600", latitude: -27.5906685, longitude: -48.5605664 },
-    to: { CEP: "22030060", latitude: -9.610394, longitude: -35.725652 }
+    to: { CEP: "22030060", latitude: -9.610394, longitude: -35.725652 },
+    token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImpvYW9AZ21haWwuY29tIiwiaWF0IjoxNjc3Njc1NjAwMDAwLCJleHBpcmVzSW4iOjEwMDAwMDB9.UkLW3l3gaIW7U0JGpZnDUZTbE_fHtDLd-eI9yV0_C8s"
   }
 
   const response = await checkout.execute(order);
-  expect(response.getItems().length).toBe(3);
-  expect(response.getTotal()).toBe(28000);
-  expect(response.getTotalFare()).toBe(1060)
+  expect(response.items.length).toBe(3);
+  expect(response.total).toBe(28000);
+  expect(response.totalFare).toBe(1060)
 })
 
 test('Should create and persist an order', async function () {
@@ -217,15 +226,16 @@ test('Should create and persist an order', async function () {
       { "idProduct": 3, "quantity": 1 }
     ],
     from: { CEP: "88015600", latitude: -27.5906685, longitude: -48.5605664 },
-    to: { CEP: "22030060", latitude: -9.610394, longitude: -35.725652 }
+    to: { CEP: "22030060", latitude: -9.610394, longitude: -35.725652 },
+    token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImpvYW9AZ21haWwuY29tIiwiaWF0IjoxNjc3Njc1NjAwMDAwLCJleHBpcmVzSW4iOjEwMDAwMDB9.UkLW3l3gaIW7U0JGpZnDUZTbE_fHtDLd-eI9yV0_C8s"
   }
 
   await checkout.execute(order);
   const response = await getOrder.execute(uuid);
-  expect(response.getItems().length).toBe(3);
-  expect(response.getTotal()).toBe(35000);
-  expect(response.getTotalFare()).toBe(1060)
-  expect(response.getCode()).toBe("202300000001")
+  expect(response.items.length).toBe(3);
+  expect(response.total).toBe(35000);
+  expect(response.totalFare).toBe(1060)
+  expect(response.code).toBe("202300000001")
 
   const order_id2 = crypto.randomUUID();
   const order2 = {
@@ -237,15 +247,16 @@ test('Should create and persist an order', async function () {
       { "idProduct": 3, "quantity": 1 }
     ],
     from: { CEP: "88015600", latitude: -27.5906685, longitude: -48.5605664 },
-    to: { CEP: "22030060", latitude: -9.610394, longitude: -35.725652 }
+    to: { CEP: "22030060", latitude: -9.610394, longitude: -35.725652 },
+    token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImpvYW9AZ21haWwuY29tIiwiaWF0IjoxNjc3Njc1NjAwMDAwLCJleHBpcmVzSW4iOjEwMDAwMDB9.UkLW3l3gaIW7U0JGpZnDUZTbE_fHtDLd-eI9yV0_C8s"
   }
 
   await checkout.execute(order2);
   const order2_ = await getOrder.execute(order_id2);
-  expect(order2_.getItems().length).toBe(3);
-  expect(order2_.getTotal()).toBe(35000);
-  expect(order2_.getTotalFare()).toBe(1060)
-  expect(order2_.getCode()).toBe("202300000002")
+  expect(order2_.items.length).toBe(3);
+  expect(order2_.total).toBe(35000);
+  expect(order2_.totalFare).toBe(1060)
+  expect(order2_.code).toBe("202300000002")
 })
 
 afterEach(async () => {
