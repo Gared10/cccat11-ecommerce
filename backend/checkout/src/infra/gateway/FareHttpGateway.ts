@@ -14,7 +14,8 @@ export default class FareHttpGateway implements FareGateway {
   }
 
   async simulateFare(fare: any): Promise<number> {
-    return this.httpClient.get("http://localhost:3002/simulateFare", fare)
+    const output = await this.httpClient.get("http://localhost:3002/simulateFare", fare)
+    return output.fare
   }
 
 }
