@@ -7,6 +7,6 @@ export default interface FareGateway {
 
 type Input = {
   items: { idProduct: number, quantity: number }[],
-  from: { CEP: string, latitude: number, longitude: number },
-  to: { CEP: string, latitude: number, longitude: number }
+  from: string,
+  to: string
 }
