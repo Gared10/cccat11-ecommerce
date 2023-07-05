@@ -1,9 +1,6 @@
 import Coupon from "./Coupon";
-import DistanceCalculator from "./DistanceCalculator";
-import Location from "./Location";
 import OrderItem from "./OrderItem"
 import Product from "./Product"
-import { calculateFare } from "./calculateFare"
 
 export default class Order {
   private cpf: string;
@@ -14,7 +11,7 @@ export default class Order {
   private total: number;
   private totalFare: number;
 
-  constructor(cpf: string, id: string, readonly fromCEP: Location, readonly toCEP: Location, code?: string, sequence?: number, items?: OrderItem[], readonly date: Date = new Date()) {
+  constructor(cpf: string, id: string, readonly fromCEP: string, readonly toCEP: string, code?: string, sequence?: number, items?: OrderItem[], readonly date: Date = new Date()) {
     if (!id) throw new Error("Order's id is mandatory")
     this.items = items ?? [];
     this.cpf = cpf;
@@ -28,13 +25,11 @@ export default class Order {
     if (this.items.find(item => item.getIdProduct() === product.idProduct)) throw new Error("Duplicated item!");
     this.items.push(new OrderItem(quantity, product));
     this.total = this.getTotal();
-    this.totalFare = this.getTotalFare()
   }
 
   addCoupon(coupon: Coupon) {
     if (coupon.isValid(this.date)) this.coupon = coupon;
     this.total = this.getTotal();
-    this.totalFare = this.getTotalFare()
   }
 
   getItems(): OrderItem[] {
@@ -50,6 +45,10 @@ export default class Order {
     return total;
   }
 
+  getTotalFare(): number {
+    return this.totalFare;
+  }
+
   getCpf(): string {
     return this.cpf
   }
@@ -62,14 +61,16 @@ export default class Order {
     this.items = items;
   }
 
-  getTotalFare(): number {
-    const items: OrderItem[] = this.items;
-    let fare: number = 0;
-    const distance = DistanceCalculator.calculate(this.fromCEP.getCoords(), this.toCEP.getCoords());
-    for (const item of items) {
-      fare += calculateFare(item.getProduct(), distance)
-    }
-    return fare
+  setTotalFare(fare: number): void {
+    this.totalFare = fare;
+  }
+
+  getFromCEP(): string {
+    return this.fromCEP;
+  }
+
+  getToCEP(): string {
+    return this.toCEP;
   }
 
   generateCode(sequence: number) {
@@ -80,13 +81,5 @@ export default class Order {
 
   getCode() {
     return this.code;
-  }
-
-  getFromCEP() {
-    return this.fromCEP.CEP;
-  }
-
-  getToCEP() {
-    return this.toCEP.CEP;
   }
 }
