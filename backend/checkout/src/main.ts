@@ -4,7 +4,7 @@ import ExpressAdapter from "./infra/http/ExpressAdapter";
 import HttpController from "./infra/http/HttpController";
 import HttpUseCaseFactory from "./infra/factory/HttpUseCaseFactory";
 import AxiosHttpClient from "./infra/http/AxiosHttpClient";
-import GatewayHttpFactory from "./infra/factory/GatewayHttpGateway";
+import GatewayHttpFactory from "./infra/factory/GatewayHttpFactory";
 
 const port = 3000;
 const connection = new PgPromiseAdapter()
