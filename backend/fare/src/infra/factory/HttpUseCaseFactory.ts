@@ -14,7 +14,7 @@ export default class HttpUseCaseFactory implements UseCaseFactory {
   }
 
   createSimulateFare(): SimulateFare {
-    return new SimulateFare(this.gatewayFactory);
+    return new SimulateFare(this.repositoryFactory, this.gatewayFactory);
   }
 
 }
