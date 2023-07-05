@@ -1,5 +1,4 @@
-import Order from "../../../domain/entity/Order";
-
+import Order from "../../domain/entity/Order";
 export default interface OrderRepository {
   get(order: string): Promise<Order>;
   save(order: Order): Promise<void>;
