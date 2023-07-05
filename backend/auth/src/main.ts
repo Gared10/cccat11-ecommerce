@@ -4,7 +4,7 @@ import ExpressAdapter from "./infra/http/ExpressAdapter";
 import HttpController from "./infra/http/HttpController";
 import HttpUseCaseFactory from "./infra/factory/HttpUseCaseFactory";
 
-const port = 3001;
+const port = 3004;
 const connection = new PgPromiseAdapter()
 connection.connect();
 const repositoryFactory = new DatabaseRepositoryFactory(connection);
