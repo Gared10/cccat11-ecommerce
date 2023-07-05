@@ -6,17 +6,14 @@ import LocationRepository from "../../application/repository/LocationRepository"
 
 export default class OrderRepositoryDatabase implements OrderRepository {
 
-  constructor(readonly productRepository: ProductRepository, readonly locationRepository: LocationRepository, readonly connection: DatabaseConnection) {
+  constructor(readonly productRepository: ProductRepository, readonly connection: DatabaseConnection) {
     this.productRepository = productRepository;
-    this.locationRepository = locationRepository;
   }
 
-  async get(idOrder: string) {
+  async get(idOrder: string): Promise<Order> {
     const [orderData] = await this.connection.query('select * from ecommerce.order_header where id_order = $1', [idOrder]);
     const orderItemsData = await this.connection.query('select * from ecommerce.order_items where id_order = $1', [idOrder]);
-    const fromCEP = await this.locationRepository.get(orderData.fromcep)
-    const toCEP = await this.locationRepository.get(orderData.tocep)
-    const order = new Order(orderData.cpf, orderData.id_order, fromCEP, toCEP, orderData.code)
+    const order = new Order(orderData.cpf, orderData.id_order, orderData.fromcep, orderData.tocep, orderData.code)
     for (const item of orderItemsData) {
       const product = await this.productRepository.get(item.id_product);
       order.addOrderItem(item.quantity, product);
@@ -29,9 +26,7 @@ export default class OrderRepositoryDatabase implements OrderRepository {
     const orderData = await this.connection.query('select * from ecommerce.order_header order by id_order');
     const orderItemsData = await this.connection.query('select * from ecommerce.order_items order by id_order');
     for (const orderHeader of orderData) {
-      const fromCEP = await this.locationRepository.get(orderHeader.fromcep)
-      const toCEP = await this.locationRepository.get(orderHeader.tocep)
-      const order: Order = new Order(orderHeader.cpf, orderHeader.id_order, fromCEP, toCEP, orderHeader.code)
+      const order: Order = new Order(orderHeader.cpf, orderHeader.id_order, orderHeader.fromcep, orderHeader.tocep, orderHeader.code)
       for (const item of orderItemsData) {
         if (item.id_order === order.getId()) {
           const product = await this.productRepository.get(item.id_product);
