@@ -6,8 +6,8 @@ axios.defaults.validateStatus = function () {
 
 test('Should calculate fare', async function () {
   const fare = {
-    from: { CEP: "88015600", latitude: -27.5906685, longitude: -48.5605664 },
-    to: { CEP: "22030060", latitude: -9.610394, longitude: -35.725652 },
+    from: "88015600",
+    to: "22030060",
     items: [
       { "idProduct": 1, "quantity": 2 },
       { "idProduct": 2, "quantity": 5 },
