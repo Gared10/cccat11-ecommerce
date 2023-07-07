@@ -1,4 +1,3 @@
-import Coord from "../../domain/entity/Coord";
 import DistanceCalculator from "../../domain/entity/DistanceCalculator";
 import { calculateFare } from "../../domain/entity/calculateFare";
 import GatewayFactory from "../factory/GatewayFactory";
