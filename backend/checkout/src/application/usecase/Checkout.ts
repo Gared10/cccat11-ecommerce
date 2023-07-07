@@ -10,8 +10,9 @@ import FareGateway from "../gateway/FareGateway";
 import CouponRepository from "../repository/CouponRespository";
 import OrderRepository from "../repository/OrderRepository";
 import ProductRepository from "../repository/ProductRepository";
+import Usecase from "./Usecase";
 
-export default class Checkout {
+export default class Checkout implements Usecase {
   orderRepository: OrderRepository;
   productRepository: ProductRepository;
   couponRepository: CouponRepository;
@@ -32,8 +33,6 @@ export default class Checkout {
   }
 
   async execute(input: Input): Promise<Output> {
-    const session = await this.authGateway.verify(input.token);
-    if (!session) throw new Error("Authentication failed");
     let order: Order
     if (!validate(input.cpf)) throw new Error('Invalid cpf');
     let sequence = await this.orderRepository.count()

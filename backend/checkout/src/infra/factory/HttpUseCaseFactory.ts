@@ -3,17 +3,19 @@ import ListOrders from "../../application/usecase/ListOrders";
 import RepositoryFactory from "../../application/factory/RepositoryFactory";
 import UseCaseFactory from "../../application/factory/UseCaseFactory";
 import GatewayFactory from "../../application/factory/GatewayFactory";
+import AuthDecorator from "../../application/decorator/AuthDecorator";
+import Usecase from "../../application/usecase/Usecase";
 
 export default class HttpUseCaseFactory implements UseCaseFactory {
 
   constructor(readonly repositoryFactory: RepositoryFactory, readonly gatewayFactory: GatewayFactory) {
   }
 
-  createCheckout(): Checkout {
-    return new Checkout(this.repositoryFactory, this.gatewayFactory);
+  createCheckout(): Usecase {
+    return new AuthDecorator(new Checkout(this.repositoryFactory, this.gatewayFactory), this.gatewayFactory);
   }
-  createListOrders(): ListOrders {
-    return new ListOrders(this.repositoryFactory);
+  createListOrders(): Usecase {
+    return new AuthDecorator(new ListOrders(this.repositoryFactory), this.gatewayFactory);
   }
 
 }
